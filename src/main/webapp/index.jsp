@@ -14,22 +14,22 @@
 <div class="ui text container kipa">
     <%@ include file="./jsp/parts/topmenu.jsp" %>
     <div class="ui clearing basic nopadding segment">
-        <jsp:include page="jsp/parts/breadcrumbs.jsp">
+        <jsp:include page="./jsp/parts/breadcrumbs.jsp">
             <jsp:param name="position" value="left floated"/>
         </jsp:include>
         <c:if test="${not empty sessionScope.user}">
-            <jsp:include page="jsp/parts/account.jsp">
+            <jsp:include page="./jsp/parts/account.jsp">
                 <jsp:param name="position" value="right floated"/>
             </jsp:include>
         </c:if>
     </div>
-    <jsp:include page="jsp/parts/messages.jsp"/>
+    <jsp:include page="./jsp/parts/messages.jsp"/>
     <c:choose>
         <c:when test="${not empty page}">
-            <jsp:include page="jsp/${page.path}.jsp"/>
+            <jsp:include page="./jsp/${page.path}.jsp"/>
         </c:when>
         <c:otherwise>
-            <jsp:include page="jsp/components/404.jsp"/>
+            <jsp:include page="./jsp/components/404.jsp"/>
         </c:otherwise>
     </c:choose>
 </div>

@@ -38,9 +38,8 @@ public class LoginServlet extends AbstractServlet {
             if(action.equals("/login")) {
                 getLogin(request, response);
             } else if(action.equals("/account")) {
-                HttpSession session = request.getSession();
-                EmployeeServlet.getEmployee(request, response);
-            }else {
+                getAccount(request, response);
+            } else {
                 handleNotFound(request, response);
             }
         } catch (SQLException ex) {
@@ -65,7 +64,21 @@ public class LoginServlet extends AbstractServlet {
         }
     }
 
-    protected void getLogin(HttpServletRequest request, HttpServletResponse response)
+    private void getAccount(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        final Employee employee = (Employee) request.getSession().getAttribute("user");
+        request.setAttribute("breadcrumbs", new ArrayList<Breadcrumb>() {{
+            add(new Breadcrumb("Home", "/", "home"));
+            add(new Breadcrumb(employee.getName().concat(" ("+ employee.getCode() +")"), null, "user"));
+        }});
+        request.setAttribute("page", new Page(employee.getName().concat(" | ".concat(Constanta._APP_NAME))) {{setPath("employee/detail");}});
+        request.setAttribute("employee", employee);
+
+        String path = getTemplatePath("/");
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher(path);
+        requestDispatcher.forward(request, response);
+    }
+
+    private void getLogin(HttpServletRequest request, HttpServletResponse response)
         throws  ServletException, IOException, SQLException {
         request.setAttribute("breadcrumbs", new ArrayList<Breadcrumb>() {{
             add(new Breadcrumb("Home", "/", "home"));
@@ -78,7 +91,7 @@ public class LoginServlet extends AbstractServlet {
         requestDispatcher.forward(request, response);
     }
 
-    protected  void postLogout(HttpServletRequest request, HttpServletResponse response)
+    private  void postLogout(HttpServletRequest request, HttpServletResponse response)
         throws SQLException, ServletException, IOException {
         HttpSession session = request.getSession();
         session.invalidate();
@@ -88,10 +101,10 @@ public class LoginServlet extends AbstractServlet {
                 "info",
                 "mini",
                 "info"));
-        response.sendRedirect("/login");
+        response.sendRedirect("login");
     }
 
-    protected void postLogin(HttpServletRequest request, HttpServletResponse response)
+    private void postLogin(HttpServletRequest request, HttpServletResponse response)
         throws SQLException, ServletException, IOException {
         String username = request.getParameter("username");
         String password = request.getParameter("password");

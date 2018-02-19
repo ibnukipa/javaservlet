@@ -17,12 +17,15 @@ public class LoginFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
         HttpSession session = request.getSession(false);
-        String loginURI = request.getContextPath() + "/login";
+        String loginURI = "/login";
 
         boolean loggedIn = session != null && session.getAttribute("user") != null;
         boolean loginRequest = request.getRequestURI().equals(loginURI);
         boolean resourceFiles = request.getRequestURI().matches(".*(css|jpg|png|gif|js|ico)");
-        if (loggedIn || loginRequest || resourceFiles) {
+
+        if(loggedIn && loginRequest) {
+            response.sendRedirect("/");
+        } else if (loggedIn || loginRequest || resourceFiles) {
             chain.doFilter(request, response);
         } else {
             response.sendRedirect(loginURI);

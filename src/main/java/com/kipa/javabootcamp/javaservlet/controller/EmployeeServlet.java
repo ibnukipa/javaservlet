@@ -101,7 +101,7 @@ public class EmployeeServlet extends AbstractServlet {
         requestDispatcher.forward(request, response);
     }
 
-    public static void getEmployee(HttpServletRequest request, HttpServletResponse response)
+    private void getEmployee(HttpServletRequest request, HttpServletResponse response)
         throws SQLException, IOException, ServletException {
         Integer employeeId = Integer.parseInt(request.getParameter("id"));
         final Employee employee = employeeDAO.getEmployee(employeeId);

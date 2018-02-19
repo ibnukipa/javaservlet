@@ -20,7 +20,7 @@ public class HomeServlet extends AbstractServlet {
         getHome(request, response);
     }
 
-    public static void getHome(HttpServletRequest request, HttpServletResponse response)
+    private void getHome(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.setAttribute("breadcrumbs", new ArrayList<Breadcrumb>() {{
             add(new Breadcrumb("Home", "/", "home"));
