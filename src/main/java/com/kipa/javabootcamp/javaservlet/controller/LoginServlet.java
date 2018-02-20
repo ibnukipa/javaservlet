@@ -4,7 +4,7 @@ import com.kipa.javabootcamp.javaservlet.common.Breadcrumb;
 import com.kipa.javabootcamp.javaservlet.common.Constanta;
 import com.kipa.javabootcamp.javaservlet.common.Message;
 import com.kipa.javabootcamp.javaservlet.common.Page;
-import com.kipa.javabootcamp.javaservlet.dao.EmployeeDAO;
+import com.kipa.javabootcamp.javaservlet.dao.EmployeeDao;
 import com.kipa.javabootcamp.javaservlet.model.Employee;
 
 import javax.servlet.RequestDispatcher;
@@ -20,14 +20,14 @@ import java.util.ArrayList;
 @WebServlet({"/login", "/logout", "/account"})
 public class LoginServlet extends AbstractServlet {
     private static final long serialVersionUID = 1L;
-    private EmployeeDAO employeeDAO;
+    private EmployeeDao employeeDao;
 
     public void init() {
         String jdbcURL = getServletContext().getInitParameter("jdbcURL");
         String jdbcUsername = getServletContext().getInitParameter("jdbcUsername");
         String jdbcPassword = getServletContext().getInitParameter("jdbcPassword");
 
-        employeeDAO = new EmployeeDAO(jdbcURL, jdbcUsername, jdbcPassword);
+        employeeDao = new EmployeeDao(jdbcURL, jdbcUsername, jdbcPassword);
     }
 
     @Override
@@ -108,7 +108,7 @@ public class LoginServlet extends AbstractServlet {
         throws SQLException, ServletException, IOException {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-        Employee employee = employeeDAO.loginEmployee(username, password);
+        Employee employee = employeeDao.loginEmployee(username, password);
         if (employee != null) {
             request.getSession().setAttribute("user", employee);
             response.sendRedirect("/");

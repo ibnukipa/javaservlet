@@ -4,7 +4,7 @@ import com.kipa.javabootcamp.javaservlet.common.Breadcrumb;
 import com.kipa.javabootcamp.javaservlet.common.Constanta;
 import com.kipa.javabootcamp.javaservlet.common.Message;
 import com.kipa.javabootcamp.javaservlet.common.Page;
-import com.kipa.javabootcamp.javaservlet.dao.EmployeeDAO;
+import com.kipa.javabootcamp.javaservlet.dao.EmployeeDao;
 import com.kipa.javabootcamp.javaservlet.model.Employee;
 
 import javax.servlet.RequestDispatcher;
@@ -20,14 +20,14 @@ import java.util.List;
 @WebServlet({"/employee", "/employee/create", "/employee/update", "/employee/delete"})
 public class EmployeeServlet extends AbstractServlet {
     private static final long serialVersionUID = 1L;
-    private static EmployeeDAO employeeDAO;
+    private static EmployeeDao employeeDao;
 
     public void init() {
         String jdbcURL = getServletContext().getInitParameter("jdbcURL");
         String jdbcUsername = getServletContext().getInitParameter("jdbcUsername");
         String jdbcPassword = getServletContext().getInitParameter("jdbcPassword");
 
-        employeeDAO = new EmployeeDAO(jdbcURL, jdbcUsername, jdbcPassword);
+        employeeDao = new EmployeeDao(jdbcURL, jdbcUsername, jdbcPassword);
     }
 
     @Override
@@ -87,13 +87,13 @@ public class EmployeeServlet extends AbstractServlet {
 
     private void getEmployees(HttpServletRequest request, HttpServletResponse response)
         throws SQLException, IOException, ServletException {
-        List<Employee> employees = employeeDAO.listAllEmployees();
+        List<Employee> employees = employeeDao.listAllEmployees();
 
         request.setAttribute("breadcrumbs", new ArrayList<Breadcrumb>() {{
             add(new Breadcrumb("Home", "/", "home"));
-            add(new Breadcrumb("Employee", null, "users"));
+            add(new Breadcrumb("Employees", null, "users"));
         }});
-        request.setAttribute("page", new Page("Employee | ".concat(Constanta._APP_NAME)) {{setPath("employee");}});
+        request.setAttribute("page", new Page("Employees | ".concat(Constanta._APP_NAME)) {{setPath("employee");}});
         request.setAttribute("employees", employees);
 
         String path = getTemplatePath("/");
@@ -104,7 +104,7 @@ public class EmployeeServlet extends AbstractServlet {
     private void getEmployee(HttpServletRequest request, HttpServletResponse response)
         throws SQLException, IOException, ServletException {
         Integer employeeId = Integer.parseInt(request.getParameter("id"));
-        final Employee employee = employeeDAO.getEmployee(employeeId);
+        final Employee employee = employeeDao.getEmployee(employeeId);
 
         if(employee == null) {
             handleNotFound(request, response);
@@ -140,7 +140,7 @@ public class EmployeeServlet extends AbstractServlet {
     private void postCreateEmployee(HttpServletRequest request, HttpServletResponse response)
         throws SQLException, IOException, ServletException {
         Employee theEmployee = convertRequestToEmployee(request);
-        employeeDAO.insertEmployee(theEmployee);
+        employeeDao.insertEmployee(theEmployee);
         request.setAttribute("message", new Message(
             "Employee "+ theEmployee.getName() +" has been CREATED",
             "#"+theEmployee.getCode()+" - "+theEmployee.getName()+" ("+theEmployee.getGrade()+" - "+theEmployee.getStream()+")",
@@ -154,7 +154,7 @@ public class EmployeeServlet extends AbstractServlet {
     private void getUpdateEmployee(HttpServletRequest request, HttpServletResponse response)
         throws SQLException, IOException, ServletException {
         Integer employeeId = Integer.parseInt(request.getParameter("id"));
-        final Employee employee = employeeDAO.getEmployee(employeeId);
+        final Employee employee = employeeDao.getEmployee(employeeId);
 
         if(employee == null) {
             handleNotFound(request, response);
@@ -177,7 +177,7 @@ public class EmployeeServlet extends AbstractServlet {
         throws SQLException, IOException, ServletException {
         Employee theEmployee = convertRequestToEmployee(request);
         theEmployee.setId(Integer.parseInt(request.getParameter("employee_id")));
-        employeeDAO.updateEmployee(theEmployee);
+        employeeDao.updateEmployee(theEmployee);
 
         request.setAttribute("message", new Message(
                 "Employee "+ theEmployee.getName() +" has been UPDATED",
@@ -193,12 +193,12 @@ public class EmployeeServlet extends AbstractServlet {
             throws SQLException, IOException, ServletException {
         Integer employeeId = Integer.parseInt(request.getParameter("id"));
 
-        Employee employee = employeeDAO.getEmployee(employeeId);
+        Employee employee = employeeDao.getEmployee(employeeId);
 
         if (employee == null) {
             handleNotFound(request, response);
         } else {
-            employeeDAO.deleteEmployee(employee);
+            employeeDao.deleteEmployee(employee);
             request.setAttribute("message", new Message(
                 "Employee "+ employee.getName() +" has been DELETED",
                 "#"+employee.getCode()+" - "+employee.getName()+" ("+employee.getGrade()+" - "+employee.getStream()+")",

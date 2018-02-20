@@ -6,7 +6,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EmployeeDAO {
+public class EmployeeDao {
     private static String _TABLE = "employee";
 
     private String jdbcURL;
@@ -14,7 +14,7 @@ public class EmployeeDAO {
     private String jdbcPassword;
     private Connection jdbcConnection;
 
-    public EmployeeDAO(String jdbcURL, String jdbcUsername, String jdbcPassword) {
+    public EmployeeDao(String jdbcURL, String jdbcUsername, String jdbcPassword) {
         this.jdbcURL = jdbcURL;
         this.jdbcUsername = jdbcUsername;
         this.jdbcPassword = jdbcPassword;
