@@ -19,23 +19,19 @@ import java.util.List;
 
 @WebServlet({"/employee", "/employee/create", "/employee/update", "/employee/delete"})
 public class EmployeeServlet extends AbstractServlet {
-    private EmployeeDao employeeDao;
+    private EmployeeDao employeeDao = new EmployeeDao();
 
-    public void init() {
-        employeeDao = new EmployeeDao();
-    }
-
-    private Employee convertRequestToEmployee(final HttpServletRequest request) {
-        return new Employee(){{
-            setCode(request.getParameter("employee_code"));
-            setUsername(request.getParameter("employee_username"));
-            setPassword(request.getParameter("employee_password"));
-            setName(request.getParameter("employee_name"));
-            setAddress(request.getParameter("employee_address"));
-            setPhone(request.getParameter("employee_phone"));
-            setGrade(request.getParameter("employee_grade"));
-            setStream(request.getParameter("employee_stream"));
-        }};
+    private Employee convertRequestToEmployee(HttpServletRequest request) {
+        Employee employee = new Employee();
+        employee.setCode(request.getParameter("employee_code"));
+        employee.setUsername(request.getParameter("employee_username"));
+        employee.setPassword(request.getParameter("employee_password"));
+        employee.setName(request.getParameter("employee_name"));
+        employee.setAddress(request.getParameter("employee_address"));
+        employee.setPhone(request.getParameter("employee_phone"));
+        employee.setGrade(request.getParameter("employee_grade"));
+        employee.setStream(request.getParameter("employee_stream"));
+        return employee;
     }
 
     @Override
@@ -134,7 +130,7 @@ public class EmployeeServlet extends AbstractServlet {
 
     private void postCreateEmployee(HttpServletRequest request, HttpServletResponse response)
         throws SQLException, IOException, ServletException {
-        Employee employee = convertRequestToEmployee(request);
+        Employee employee = this.convertRequestToEmployee(request);
         employeeDao.create(employee);
         request.setAttribute("message", new Message(
             "Employee "+ employee.getName() +" has been CREATED",
@@ -143,7 +139,7 @@ public class EmployeeServlet extends AbstractServlet {
             "mini",
             "checkmark"));
 
-        getEmployees(request, response);
+        response.sendRedirect("/employee");
     }
 
     private void getUpdateEmployee(HttpServletRequest request, HttpServletResponse response)

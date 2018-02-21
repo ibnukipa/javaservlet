@@ -1,0 +1,39 @@
+package com.kipa.javabootcamp.javaservlet.dao;
+
+import com.kipa.javabootcamp.javaservlet.util.JpaUtil;
+
+import javax.persistence.EntityManager;
+
+public abstract class AbstractDao<T> {
+    EntityManager entityManager = JpaUtil.getEntityManager();
+
+    public void create(T o) {
+        try {
+            entityManager.getTransaction().begin();
+            entityManager.persist(o);
+            entityManager.getTransaction().commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void update(T o) {
+        try {
+            entityManager.getTransaction().begin();
+            entityManager.merge(o);
+            entityManager.getTransaction().commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void delete(T o) {
+        try {
+            entityManager.getTransaction().begin();
+            entityManager.remove(o);
+            entityManager.getTransaction().commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}

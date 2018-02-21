@@ -2,45 +2,11 @@ package com.kipa.javabootcamp.javaservlet.dao;
 
 import com.kipa.javabootcamp.javaservlet.model.Employee;
 import com.kipa.javabootcamp.javaservlet.util.CastHelperUtil;
-import com.kipa.javabootcamp.javaservlet.util.JpaUtil;
 
-import javax.persistence.EntityManager;
 import java.util.List;
 
-public class EmployeeDao {
-    private EntityManager entityManager = JpaUtil.getEntityManager();
-
+public class EmployeeDao extends AbstractDao<Employee> {
     public EmployeeDao(){}
-
-    public void create(Employee employee) {
-        try {
-            entityManager.getTransaction().begin();
-            entityManager.persist(employee);
-            entityManager.getTransaction().commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void update(Employee employee) {
-        try {
-            entityManager.getTransaction().begin();
-            entityManager.merge(employee);
-            entityManager.getTransaction().commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void delete(Employee employee) {
-        try {
-            entityManager.getTransaction().begin();
-            entityManager.remove(employee);
-            entityManager.getTransaction().commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     public List<Employee> getEmployees() {
         List<Employee> employees = null;

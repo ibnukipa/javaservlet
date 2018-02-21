@@ -5,6 +5,7 @@
     <persistence-unit name="rmsservletjpa" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <class>com.kipa.javabootcamp.javaservlet.model.Course</class>
+        <class>com.kipa.javabootcamp.javaservlet.model.Employee</class>
         <properties>
             <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
             <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/rms" />

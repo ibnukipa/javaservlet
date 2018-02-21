@@ -1,15 +1,13 @@
 package com.kipa.javabootcamp.javaservlet.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "employee")
 public class Employee {
     @Id
     @Column(name = "employee_id")
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "employee_code")
