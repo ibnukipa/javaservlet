@@ -121,7 +121,7 @@ public class EmployeeServlet extends AbstractServlet {
             add(new Breadcrumb("Employee", "/employee", "users"));
             add(new Breadcrumb("Create", null, "users"));
         }});
-        request.setAttribute("page", new Page("Create Employee | " + Constanta._APP_NAME) {{setPath("employee/create");}});
+        request.setAttribute("page", new Page("Create Employee | " + Constanta._APP_NAME) {{setPath("employee/form");}});
 
         String path = getTemplatePath("/");
         RequestDispatcher requestDispatcher = request.getRequestDispatcher(path);
@@ -155,7 +155,7 @@ public class EmployeeServlet extends AbstractServlet {
                 add(new Breadcrumb("Employee", "/employee", "users"));
                 add(new Breadcrumb(employee.getName().concat(" ("+ employee.getCode() +")"), null, "user"));
             }});
-            request.setAttribute("page", new Page(employee.getName()+ " | " + Constanta._APP_NAME) {{setPath("employee/update");}});
+            request.setAttribute("page", new Page(employee.getName()+ " | " + Constanta._APP_NAME) {{setPath("employee/form");}});
             request.setAttribute("employee", employee);
 
             String path = getTemplatePath("/");
