@@ -19,15 +19,10 @@ import java.util.ArrayList;
 
 @WebServlet({"/login", "/logout", "/account"})
 public class LoginServlet extends AbstractServlet {
-    private static final long serialVersionUID = 1L;
     private EmployeeDao employeeDao;
 
     public void init() {
-        String jdbcURL = getServletContext().getInitParameter("jdbcURL");
-        String jdbcUsername = getServletContext().getInitParameter("jdbcUsername");
-        String jdbcPassword = getServletContext().getInitParameter("jdbcPassword");
-
-        employeeDao = new EmployeeDao(jdbcURL, jdbcUsername, jdbcPassword);
+        employeeDao = new EmployeeDao();
     }
 
     @Override
@@ -66,10 +61,12 @@ public class LoginServlet extends AbstractServlet {
 
     private void getAccount(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         final Employee employee = (Employee) request.getSession().getAttribute("user");
-        request.setAttribute("breadcrumbs", new ArrayList<Breadcrumb>() {{
+
+        request.setAttribute("breadcrumbs", new ArrayList<Breadcrumb>(){{
             add(new Breadcrumb("Home", "/", "home"));
             add(new Breadcrumb(employee.getName().concat(" ("+ employee.getCode() +")"), null, "user"));
         }});
+
         request.setAttribute("page", new Page(employee.getName().concat(" | ".concat(Constanta._APP_NAME))) {{setPath("employee/detail");}});
         request.setAttribute("employee", employee);
 
@@ -80,7 +77,7 @@ public class LoginServlet extends AbstractServlet {
 
     private void getLogin(HttpServletRequest request, HttpServletResponse response)
         throws  ServletException, IOException, SQLException {
-        request.setAttribute("breadcrumbs", new ArrayList<Breadcrumb>() {{
+        request.setAttribute("breadcrumbs", new ArrayList<Breadcrumb>(){{
             add(new Breadcrumb("Home", "/", "home"));
             add(new Breadcrumb("Login", "/login", "lock"));
         }});
@@ -108,7 +105,7 @@ public class LoginServlet extends AbstractServlet {
         throws SQLException, ServletException, IOException {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-        Employee employee = employeeDao.loginEmployee(username, password);
+        Employee employee = employeeDao.authenticate(username, password);
         if (employee != null) {
             request.getSession().setAttribute("user", employee);
             response.sendRedirect("/");

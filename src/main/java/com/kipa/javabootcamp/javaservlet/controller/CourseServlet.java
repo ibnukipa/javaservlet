@@ -19,10 +19,6 @@ import java.util.List;
 @WebServlet({"/course", "/course/create", "/course/update", "/course/delete"})
 public class CourseServlet extends AbstractServlet {
     private CourseDao courseDao;
-    private ArrayList<Breadcrumb> breadcrumbs = new ArrayList<Breadcrumb>(){{
-        add(new Breadcrumb("Home", "/", "home"));
-        add(new Breadcrumb("Courses", "/course", "bookmark"));
-    }};
 
     public void init() {
         courseDao = new CourseDao();
@@ -74,7 +70,10 @@ public class CourseServlet extends AbstractServlet {
         throws SQLException, IOException, ServletException {
         List<Course> courses = courseDao.getCourses();
 
-        request.setAttribute("breadcrumbs", breadcrumbs);
+        request.setAttribute("breadcrumbs", new ArrayList<Breadcrumb>(){{
+            add(new Breadcrumb("Home", "/", "home"));
+            add(new Breadcrumb("Courses", "/course", "bookmark"));
+        }});
         request.setAttribute("page", new Page("Courses | ".concat(Constanta._APP_NAME)) {{setPath("course");}});
         request.setAttribute("courses", courses);
 
@@ -90,7 +89,11 @@ public class CourseServlet extends AbstractServlet {
         if(course == null) {
             handleNotFound(request, response);
         } else {
-            request.setAttribute("breadcrumbs", breadcrumbs.add(new Breadcrumb(course.getName(), null, "star")));
+            request.setAttribute("breadcrumbs", new ArrayList<Breadcrumb>(){{
+                add(new Breadcrumb("Home", "/", "home"));
+                add(new Breadcrumb("Courses", "/course", "bookmark"));
+                add(new Breadcrumb(course.getName(), null, "star"));
+            }});
             request.setAttribute("page", new Page(course.getName().concat(" | ".concat(Constanta._APP_NAME))) {{setPath("course/detail");}});
             request.setAttribute("course", course);
 

@@ -1,48 +1,42 @@
 package com.kipa.javabootcamp.javaservlet.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "employee")
 public class Employee {
+    @Id
+    @Column(name = "employee_id")
     private Integer id;
+
+    @Column(name = "employee_code")
     private String code;
+
+    @Column(name = "employee_username")
     private String username;
+
+    @Column(name = "employee_password")
     private String password;
+
+    @Column(name = "employee_name")
     private String name;
+
+    @Column(name = "employee_address")
     private String address;
+
+    @Column(name = "employee_phone")
     private String phone;
+
+    @Column(name = "employee_grade")
     private String grade;
+
+    @Column(name = "employee_stream")
     private String stream;
 
-    public Employee() {}
-
-    public Employee(Integer id) {
-        this.id = id;
-    }
-
-    public Employee(
-            Integer id, String code, String username, String password,
-            String name, String address, String phone, String grade, String stream) {
-        this.id = id;
-        this.code = code;
-        this.username = username;
-        this.password = password;
-        this.name = name;
-        this.address = address;
-        this.phone = phone;
-        this.grade = grade;
-        this.stream = stream;
-    }
-
-    public Employee(
-            String code, String username, String password,
-            String name, String address, String phone, String grade, String stream) {
-        this.code = code;
-        this.username = username;
-        this.password = password;
-        this.name = name;
-        this.address = address;
-        this.phone = phone;
-        this.grade = grade;
-        this.stream = stream;
-    }
+    public Employee(){}
 
     public Integer getId() {
         return id;

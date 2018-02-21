@@ -19,15 +19,23 @@ import java.util.List;
 
 @WebServlet({"/employee", "/employee/create", "/employee/update", "/employee/delete"})
 public class EmployeeServlet extends AbstractServlet {
-    private static final long serialVersionUID = 1L;
-    private static EmployeeDao employeeDao;
+    private EmployeeDao employeeDao;
 
     public void init() {
-        String jdbcURL = getServletContext().getInitParameter("jdbcURL");
-        String jdbcUsername = getServletContext().getInitParameter("jdbcUsername");
-        String jdbcPassword = getServletContext().getInitParameter("jdbcPassword");
+        employeeDao = new EmployeeDao();
+    }
 
-        employeeDao = new EmployeeDao(jdbcURL, jdbcUsername, jdbcPassword);
+    private Employee convertRequestToEmployee(final HttpServletRequest request) {
+        return new Employee(){{
+            setCode(request.getParameter("employee_code"));
+            setUsername(request.getParameter("employee_username"));
+            setPassword(request.getParameter("employee_password"));
+            setName(request.getParameter("employee_name"));
+            setAddress(request.getParameter("employee_address"));
+            setPhone(request.getParameter("employee_phone"));
+            setGrade(request.getParameter("employee_grade"));
+            setStream(request.getParameter("employee_stream"));
+        }};
     }
 
     @Override
@@ -72,26 +80,13 @@ public class EmployeeServlet extends AbstractServlet {
         }
     }
 
-    private Employee convertRequestToEmployee(HttpServletRequest request) {
-        String code = request.getParameter("employee_code");
-        String username = request.getParameter("employee_username");
-        String password = request.getParameter("employee_password");
-        String name = request.getParameter("employee_name");
-        String address = request.getParameter("employee_address");
-        String phone = request.getParameter("employee_phone");
-        String grade = request.getParameter("employee_grade");
-        String stream = request.getParameter("employee_stream");
-
-        return new Employee(code, username, password, name, address, phone, grade, stream);
-    }
-
     private void getEmployees(HttpServletRequest request, HttpServletResponse response)
         throws SQLException, IOException, ServletException {
-        List<Employee> employees = employeeDao.listAllEmployees();
+        List<Employee> employees = employeeDao.getEmployees();
 
-        request.setAttribute("breadcrumbs", new ArrayList<Breadcrumb>() {{
+        request.setAttribute("breadcrumbs", new ArrayList<Breadcrumb>(){{
             add(new Breadcrumb("Home", "/", "home"));
-            add(new Breadcrumb("Employees", null, "users"));
+            add(new Breadcrumb("Employee", "/employee", "users"));
         }});
         request.setAttribute("page", new Page("Employees | ".concat(Constanta._APP_NAME)) {{setPath("employee");}});
         request.setAttribute("employees", employees);
@@ -104,12 +99,12 @@ public class EmployeeServlet extends AbstractServlet {
     private void getEmployee(HttpServletRequest request, HttpServletResponse response)
         throws SQLException, IOException, ServletException {
         Integer employeeId = Integer.parseInt(request.getParameter("id"));
-        final Employee employee = employeeDao.getEmployee(employeeId);
+        final Employee employee = employeeDao.getEmployeeById(employeeId);
 
         if(employee == null) {
             handleNotFound(request, response);
         } else {
-            request.setAttribute("breadcrumbs", new ArrayList<Breadcrumb>() {{
+            request.setAttribute("breadcrumbs", new ArrayList<Breadcrumb>(){{
                 add(new Breadcrumb("Home", "/", "home"));
                 add(new Breadcrumb("Employee", "/employee", "users"));
                 add(new Breadcrumb(employee.getName().concat(" ("+ employee.getCode() +")"), null, "user"));
@@ -125,7 +120,7 @@ public class EmployeeServlet extends AbstractServlet {
 
     private void getCreateEmployee(HttpServletRequest request, HttpServletResponse response)
         throws IOException, ServletException {
-        request.setAttribute("breadcrumbs", new ArrayList<Breadcrumb>() {{
+        request.setAttribute("breadcrumbs", new ArrayList<Breadcrumb>(){{
             add(new Breadcrumb("Home", "/", "home"));
             add(new Breadcrumb("Employee", "/employee", "users"));
             add(new Breadcrumb("Create", null, "users"));
@@ -139,11 +134,11 @@ public class EmployeeServlet extends AbstractServlet {
 
     private void postCreateEmployee(HttpServletRequest request, HttpServletResponse response)
         throws SQLException, IOException, ServletException {
-        Employee theEmployee = convertRequestToEmployee(request);
-        employeeDao.insertEmployee(theEmployee);
+        Employee employee = convertRequestToEmployee(request);
+        employeeDao.create(employee);
         request.setAttribute("message", new Message(
-            "Employee "+ theEmployee.getName() +" has been CREATED",
-            "#"+theEmployee.getCode()+" - "+theEmployee.getName()+" ("+theEmployee.getGrade()+" - "+theEmployee.getStream()+")",
+            "Employee "+ employee.getName() +" has been CREATED",
+            "#"+employee.getCode()+" - "+employee.getName()+" ("+employee.getGrade()+" - "+employee.getStream()+")",
             "success",
             "mini",
             "checkmark"));
@@ -154,12 +149,12 @@ public class EmployeeServlet extends AbstractServlet {
     private void getUpdateEmployee(HttpServletRequest request, HttpServletResponse response)
         throws SQLException, IOException, ServletException {
         Integer employeeId = Integer.parseInt(request.getParameter("id"));
-        final Employee employee = employeeDao.getEmployee(employeeId);
+        final Employee employee = employeeDao.getEmployeeById(employeeId);
 
         if(employee == null) {
             handleNotFound(request, response);
         } else {
-            request.setAttribute("breadcrumbs", new ArrayList<Breadcrumb>() {{
+            request.setAttribute("breadcrumbs", new ArrayList<Breadcrumb>(){{
                 add(new Breadcrumb("Home", "/", "home"));
                 add(new Breadcrumb("Employee", "/employee", "users"));
                 add(new Breadcrumb(employee.getName().concat(" ("+ employee.getCode() +")"), null, "user"));
@@ -175,13 +170,13 @@ public class EmployeeServlet extends AbstractServlet {
 
     private void postUpdateEmployee(HttpServletRequest request, HttpServletResponse response)
         throws SQLException, IOException, ServletException {
-        Employee theEmployee = convertRequestToEmployee(request);
-        theEmployee.setId(Integer.parseInt(request.getParameter("employee_id")));
-        employeeDao.updateEmployee(theEmployee);
+        Employee employee = convertRequestToEmployee(request);
+        employee.setId(Integer.parseInt(request.getParameter("employee_id")));
+        employeeDao.update(employee);
 
         request.setAttribute("message", new Message(
-                "Employee "+ theEmployee.getName() +" has been UPDATED",
-                "#"+theEmployee.getCode()+" - "+theEmployee.getName()+" ("+theEmployee.getGrade()+" - "+theEmployee.getStream()+")",
+                "Employee "+ employee.getName() +" has been UPDATED",
+                "#"+employee.getCode()+" - "+employee.getName()+" ("+employee.getGrade()+" - "+employee.getStream()+")",
                 "success",
                 "mini",
                 "checkmark"));
@@ -192,13 +187,12 @@ public class EmployeeServlet extends AbstractServlet {
     private void postDeleteEmployee(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
         Integer employeeId = Integer.parseInt(request.getParameter("id"));
-
-        Employee employee = employeeDao.getEmployee(employeeId);
+        Employee employee = employeeDao.getEmployeeById(employeeId);
 
         if (employee == null) {
             handleNotFound(request, response);
         } else {
-            employeeDao.deleteEmployee(employee);
+            employeeDao.delete(employee);
             request.setAttribute("message", new Message(
                 "Employee "+ employee.getName() +" has been DELETED",
                 "#"+employee.getCode()+" - "+employee.getName()+" ("+employee.getGrade()+" - "+employee.getStream()+")",
