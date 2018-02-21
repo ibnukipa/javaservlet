@@ -27,8 +27,6 @@ public class NotFoundServlet extends AbstractServlet {
             add(new Breadcrumb("Home", "/", "home"));
             add(new Breadcrumb("404 - Not Found", "/notfound", "warning sign"));
         }});
-        String path = getTemplatePath("/");
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher(path);
-        requestDispatcher.forward(request, response);
+        forward(request, response);
     }
 }

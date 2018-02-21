@@ -28,11 +28,17 @@ public abstract class AbstractServlet extends HttpServlet {
         }
     }
 
-    static void handleNotFound(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    static void handleNotFound(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException{
         request.setAttribute("breadcrumbs", new ArrayList<Breadcrumb>() {{
             add(new Breadcrumb("Home", "/", "home"));
             add(new Breadcrumb("404 - Not Found", "/notfound", "warning sign"));
         }});
+        forward(request, response);
+    }
+
+    static void forward(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
         String path = getTemplatePath("/");
         RequestDispatcher requestDispatcher = request.getRequestDispatcher(path);
         requestDispatcher.forward(request, response);

@@ -35,8 +35,6 @@ public class HomeServlet extends AbstractServlet {
                 "mini",
                 "certificate loading") {{setCloseable(false);}});
         }
-        String path = getTemplatePath("/");
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher(path);
-        requestDispatcher.forward(request, response);
+        forward(request, response);
     }
 }

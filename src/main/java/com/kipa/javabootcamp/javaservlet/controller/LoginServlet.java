@@ -70,9 +70,7 @@ public class LoginServlet extends AbstractServlet {
         request.setAttribute("page", new Page(employee.getName().concat(" | ".concat(Constanta._APP_NAME))) {{setPath("employee/detail");}});
         request.setAttribute("employee", employee);
 
-        String path = getTemplatePath("/");
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher(path);
-        requestDispatcher.forward(request, response);
+        forward(request, response);
     }
 
     private void getLogin(HttpServletRequest request, HttpServletResponse response)
@@ -83,9 +81,7 @@ public class LoginServlet extends AbstractServlet {
         }});
         request.setAttribute("page", new Page("Login | ".concat(Constanta._APP_NAME)) {{setPath("login");}});
 
-        String path = getTemplatePath("/");
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher(path);
-        requestDispatcher.forward(request, response);
+        forward(request, response);
     }
 
     private  void postLogout(HttpServletRequest request, HttpServletResponse response)

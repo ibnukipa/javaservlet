@@ -7,7 +7,6 @@ import com.kipa.javabootcamp.javaservlet.common.Page;
 import com.kipa.javabootcamp.javaservlet.dao.EmployeeDao;
 import com.kipa.javabootcamp.javaservlet.model.Employee;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -86,10 +85,7 @@ public class EmployeeServlet extends AbstractServlet {
         }});
         request.setAttribute("page", new Page("Employees | ".concat(Constanta._APP_NAME)) {{setPath("employee");}});
         request.setAttribute("employees", employees);
-
-        String path = getTemplatePath("/");
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher(path);
-        requestDispatcher.forward(request, response);
+        forward(request, response);
     }
 
     private void getEmployee(HttpServletRequest request, HttpServletResponse response)
@@ -107,10 +103,7 @@ public class EmployeeServlet extends AbstractServlet {
             }});
             request.setAttribute("page", new Page(employee.getName().concat(" | ".concat(Constanta._APP_NAME))) {{setPath("employee/detail");}});
             request.setAttribute("employee", employee);
-
-            String path = getTemplatePath("/");
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher(path);
-            requestDispatcher.forward(request, response);
+            forward(request, response);
         }
     }
 
@@ -122,10 +115,7 @@ public class EmployeeServlet extends AbstractServlet {
             add(new Breadcrumb("Create", null, "users"));
         }});
         request.setAttribute("page", new Page("Create Employee | " + Constanta._APP_NAME) {{setPath("employee/form");}});
-
-        String path = getTemplatePath("/");
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher(path);
-        requestDispatcher.forward(request, response);
+        forward(request, response);
     }
 
     private void postCreateEmployee(HttpServletRequest request, HttpServletResponse response)
@@ -138,7 +128,6 @@ public class EmployeeServlet extends AbstractServlet {
             "success",
             "mini",
             "checkmark"));
-
         response.sendRedirect("/employee");
     }
 
@@ -157,10 +146,7 @@ public class EmployeeServlet extends AbstractServlet {
             }});
             request.setAttribute("page", new Page(employee.getName()+ " | " + Constanta._APP_NAME) {{setPath("employee/form");}});
             request.setAttribute("employee", employee);
-
-            String path = getTemplatePath("/");
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher(path);
-            requestDispatcher.forward(request, response);
+            forward(request, response);
         }
     }
 
@@ -171,12 +157,11 @@ public class EmployeeServlet extends AbstractServlet {
         employeeDao.update(employee);
 
         request.setAttribute("message", new Message(
-                "Employee "+ employee.getName() +" has been UPDATED",
-                "#"+employee.getCode()+" - "+employee.getName()+" ("+employee.getGrade()+" - "+employee.getStream()+")",
-                "success",
-                "mini",
-                "checkmark"));
-
+            "Employee "+ employee.getName() +" has been UPDATED",
+            "#"+employee.getCode()+" - "+employee.getName()+" ("+employee.getGrade()+" - "+employee.getStream()+")",
+            "success",
+            "mini",
+            "checkmark"));
         getEmployees(request, response);
     }
 
@@ -195,7 +180,6 @@ public class EmployeeServlet extends AbstractServlet {
                 "success",
                 "mini",
                 "checkmark"));
-
             getEmployees(request, response);
         }
     }

@@ -5,7 +5,7 @@
 <div class="ui segments bordernone">
     <div class="ui segment borderradiusless">
         <div class="ui medium header">
-            <i class="ui users orange icon"></i>
+            <i class="ui bookmark orange icon"></i>
             <div class="content">
                 Course
                 <div class="sub header">Course Management</div>
