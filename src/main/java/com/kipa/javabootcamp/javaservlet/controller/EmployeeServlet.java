@@ -47,14 +47,14 @@ public class EmployeeServlet extends AbstractServlet {
             } else {
                 handleNotFound(request, response);
             }
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             throw new ServletException(ex);
         }
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
+        throws ServletException {
         try {
             String action = request.getServletPath();
             if(action.equals("/employee/create")) {
@@ -70,13 +70,13 @@ public class EmployeeServlet extends AbstractServlet {
                     getEmployees(request, response);
                 }
             }
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             throw new ServletException(ex);
         }
     }
 
     private void getEmployees(HttpServletRequest request, HttpServletResponse response)
-        throws SQLException, IOException, ServletException {
+        throws IOException, ServletException {
         List<Employee> employees = employeeDao.getEmployees();
 
         request.setAttribute("breadcrumbs", new ArrayList<Breadcrumb>(){{
@@ -89,7 +89,7 @@ public class EmployeeServlet extends AbstractServlet {
     }
 
     private void getEmployee(HttpServletRequest request, HttpServletResponse response)
-        throws SQLException, IOException, ServletException {
+        throws IOException, ServletException {
         Integer employeeId = Integer.parseInt(request.getParameter("id"));
         final Employee employee = employeeDao.getEmployeeById(employeeId);
 
@@ -119,7 +119,7 @@ public class EmployeeServlet extends AbstractServlet {
     }
 
     private void postCreateEmployee(HttpServletRequest request, HttpServletResponse response)
-        throws SQLException, IOException, ServletException {
+        throws IOException {
         Employee employee = this.convertRequestToEmployee(request);
         employeeDao.create(employee);
         request.setAttribute("message", new Message(
@@ -132,7 +132,7 @@ public class EmployeeServlet extends AbstractServlet {
     }
 
     private void getUpdateEmployee(HttpServletRequest request, HttpServletResponse response)
-        throws SQLException, IOException, ServletException {
+        throws IOException, ServletException {
         Integer employeeId = Integer.parseInt(request.getParameter("id"));
         final Employee employee = employeeDao.getEmployeeById(employeeId);
 
@@ -166,7 +166,7 @@ public class EmployeeServlet extends AbstractServlet {
     }
 
     private void postDeleteEmployee(HttpServletRequest request, HttpServletResponse response)
-            throws SQLException, IOException, ServletException {
+        throws SQLException, IOException, ServletException {
         Integer employeeId = Integer.parseInt(request.getParameter("id"));
         Employee employee = employeeDao.getEmployeeById(employeeId);
 

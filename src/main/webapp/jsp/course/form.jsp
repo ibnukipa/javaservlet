@@ -65,14 +65,6 @@
                             placeholder="Course Description"
                             type="text">
                     </div>
-                    <%--<div class="six wide field">--%>
-                        <%--<label for="course_type">Course Type</label>--%>
-                        <%--<select id="course_type" class="ui dropdown" name="course_type">--%>
-                            <%--<option value="">Course Type</option>--%>
-                            <%--<option value="fixed">Fixed</option>--%>
-                            <%--<option value="periodic">Periodic</option>--%>
-                        <%--</select>--%>
-                    <%--</div>--%>
                     <div class="six wide field">
                         <label>Course Type</label>
                         <div class="ui fluid search selection dropdown">

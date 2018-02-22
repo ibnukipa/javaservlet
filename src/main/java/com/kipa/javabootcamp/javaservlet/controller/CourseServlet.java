@@ -38,7 +38,7 @@ public class CourseServlet extends AbstractServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
+        throws ServletException {
         try {
             String action = request.getServletPath();
             if(action.equals("/course/create")) {
@@ -57,7 +57,7 @@ public class CourseServlet extends AbstractServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
+        throws ServletException {
         try {
             String action = request.getServletPath();
             if(action.equals("/course/create")) {
@@ -73,13 +73,13 @@ public class CourseServlet extends AbstractServlet {
                     getCourses(request, response);
                 }
             }
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             throw new ServletException(ex);
         }
     }
 
     private void getCourses(HttpServletRequest request, HttpServletResponse response)
-        throws SQLException, IOException, ServletException {
+        throws IOException, ServletException {
         List<Course> courses = courseDao.getCourses();
 
         request.setAttribute("breadcrumbs", new ArrayList<Breadcrumb>(){{
@@ -92,7 +92,7 @@ public class CourseServlet extends AbstractServlet {
     }
 
     private void getCourse(HttpServletRequest request, HttpServletResponse response)
-        throws SQLException, IOException, ServletException {
+        throws IOException, ServletException {
         Integer courseId = Integer.parseInt(request.getParameter("id"));
         final Course course = courseDao.getCourseById(courseId);
         if(course == null) {
@@ -122,7 +122,7 @@ public class CourseServlet extends AbstractServlet {
     }
 
     private void postCreateCourse(HttpServletRequest request, HttpServletResponse response)
-        throws IOException, Exception {
+        throws Exception {
         Course course = this.convertRequestToCourse(request);
         Employee courseBy = employeeDao.getEmployeeById(Integer.parseInt(request.getParameter("course_by")));
         course.setCourseBy(courseBy);
@@ -137,7 +137,7 @@ public class CourseServlet extends AbstractServlet {
     }
 
     private void getUpdateCourse(HttpServletRequest request, HttpServletResponse response)
-        throws SQLException, IOException, ServletException {
+        throws IOException, ServletException {
         Integer courseId = Integer.parseInt(request.getParameter("id"));
         final Course course = courseDao.getCourseById(courseId);
 
@@ -157,7 +157,7 @@ public class CourseServlet extends AbstractServlet {
     }
 
     private void postUpdateCourse(HttpServletRequest request, HttpServletResponse response)
-        throws SQLException, IOException, ServletException, Exception {
+        throws Exception {
         Course course = this.convertRequestToCourse(request);
         course.setId(Integer.parseInt(request.getParameter("course_id")));
         Employee courseBy = employeeDao.getEmployeeById(Integer.parseInt(request.getParameter("course_by")));
@@ -174,7 +174,7 @@ public class CourseServlet extends AbstractServlet {
     }
 
     private void postDeleteCourse(HttpServletRequest request, HttpServletResponse response)
-        throws SQLException, IOException, ServletException {
+        throws IOException, ServletException {
         Integer courseId = Integer.parseInt(request.getParameter("id"));
         Course course = courseDao.getCourseById(courseId);
 

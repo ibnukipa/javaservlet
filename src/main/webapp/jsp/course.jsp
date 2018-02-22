@@ -50,8 +50,8 @@
                         <div class="ui tiny header">
                             ${course.name}
                             <div class="sub header">
-                                <fmt:formatDate value="${course.startDate}" pattern="dd, MMM YYYY"/> -
-                                <fmt:formatDate value="${course.endDate}" pattern="dd, MMM YYYY"/>
+                                <fmt:formatDate value="${course.startDate}" pattern="YYYY-MM-dd"/> -
+                                <fmt:formatDate value="${course.endDate}" pattern="YYYY-MM-dd"/>
                             </div>
                         </div>
                     </td>
