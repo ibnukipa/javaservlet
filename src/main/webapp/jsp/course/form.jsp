@@ -35,6 +35,7 @@
     </div>
     <div class="ui violet segment">
         <form class="ui form" method="${formMethod}" action="${formAction}">
+            <input value="${not empty course ? course.id : null}" name="course_id" type="hidden">
             <h4 class="ui dividing header">Course Information</h4>
             <div class="ui segment basic">
                 <div class="two fields">
@@ -64,13 +65,29 @@
                             placeholder="Course Description"
                             type="text">
                     </div>
+                    <%--<div class="six wide field">--%>
+                        <%--<label for="course_type">Course Type</label>--%>
+                        <%--<select id="course_type" class="ui dropdown" name="course_type">--%>
+                            <%--<option value="">Course Type</option>--%>
+                            <%--<option value="fixed">Fixed</option>--%>
+                            <%--<option value="periodic">Periodic</option>--%>
+                        <%--</select>--%>
+                    <%--</div>--%>
                     <div class="six wide field">
-                        <label for="course_type">Course Type</label>
-                        <select id="course_type" class="ui dropdown" name="course_type">
-                            <option value="">Course Type</option>
-                            <option value="fixed">Fixed</option>
-                            <option value="periodic">Periodic</option>
-                        </select>
+                        <label>Course Type</label>
+                        <div class="ui fluid search selection dropdown">
+                            <input name="course_type" type="hidden" value="${not empty course ? course.type : null}">
+                            <i class="dropdown icon"></i>
+                            <div class="default text">Course Type</div>
+                            <div class="menu">
+                                <div class="item" data-value="fixed">
+                                    Fixed
+                                </div>
+                                <div class="item" data-value="periodic">
+                                    Periodic
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -121,7 +138,7 @@
                     <div class="sixteen wide field">
                         <label>Course Trainer/Speaker</label>
                         <div class="ui fluid search selection dropdown">
-                            <input name="course_by" type="hidden" value=""${not empty course ? course.courseBy.id : null}"">
+                            <input name="course_by" type="hidden" value="${not empty course ? course.courseBy.id : null}">
                             <i class="dropdown icon"></i>
                             <div class="default text">Course Trainer/Speaker</div>
                             <div class="menu">

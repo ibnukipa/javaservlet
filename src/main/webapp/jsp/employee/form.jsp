@@ -34,6 +34,7 @@
     </div>
     <div class="ui violet segment">
         <form class="ui form" method="${formMethod}" action="${formAction}">
+            <input value="${not empty employee ? employee.id : null}" name="employee_id" type="hidden">
             <h4 class="ui dividing header">Person Information</h4>
             <div class="ui segment basic">
                 <div class="two fields">

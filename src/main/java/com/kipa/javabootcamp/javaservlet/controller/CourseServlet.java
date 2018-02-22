@@ -44,7 +44,7 @@ public class CourseServlet extends AbstractServlet {
             if(action.equals("/course/create")) {
                 postCreateCourse(request, response);
             } else if(action.equals("/course/update")) {
-                handleNotFound(request, response);
+                postUpdateCourse(request, response);
             } else if(action.equals("/course/delete")) {
                 postDeleteCourse(request, response);
             } else {
@@ -57,13 +57,13 @@ public class CourseServlet extends AbstractServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+        throws ServletException, IOException {
         try {
             String action = request.getServletPath();
             if(action.equals("/course/create")) {
                 getCreateCourse(request, response);
             } else if(action.equals("/course/update")) {
-                handleNotFound(request, response);
+                getUpdateCourse(request, response);
             } else if(action.equals("/course/delete")) {
                 handleNotFound(request, response);
             } else {
@@ -136,8 +136,45 @@ public class CourseServlet extends AbstractServlet {
         response.sendRedirect("/course");
     }
 
+    private void getUpdateCourse(HttpServletRequest request, HttpServletResponse response)
+        throws SQLException, IOException, ServletException {
+        Integer courseId = Integer.parseInt(request.getParameter("id"));
+        final Course course = courseDao.getCourseById(courseId);
+
+        if(course == null) {
+            handleNotFound(request, response);
+        } else {
+            request.setAttribute("breadcrumbs", new ArrayList<Breadcrumb>(){{
+                add(new Breadcrumb("Home", "/", "home"));
+                add(new Breadcrumb("Course", "/course", "bookmark"));
+                add(new Breadcrumb(course.getName().concat(" ("+ course.getCode() +")"), null, "bookmark"));
+            }});
+            request.setAttribute("page", new Page(course.getName()+ " | " + Constanta._APP_NAME) {{setPath("course/form");}});
+            request.setAttribute("course", course);
+            request.setAttribute("employees", employeeDao.getEmployees());
+            forward(request, response);
+        }
+    }
+
+    private void postUpdateCourse(HttpServletRequest request, HttpServletResponse response)
+        throws SQLException, IOException, ServletException, Exception {
+        Course course = this.convertRequestToCourse(request);
+        course.setId(Integer.parseInt(request.getParameter("course_id")));
+        Employee courseBy = employeeDao.getEmployeeById(Integer.parseInt(request.getParameter("course_by")));
+        course.setCourseBy(courseBy);
+        courseDao.update(course);
+
+        request.setAttribute("message", new Message(
+                "Course "+ course.getName() +" has been UPDATED",
+                "#"+course.getCode()+" - "+course.getName(),
+                "success",
+                "mini",
+                "checkmark"));
+        getCourses(request, response);
+    }
+
     private void postDeleteCourse(HttpServletRequest request, HttpServletResponse response)
-            throws SQLException, IOException, ServletException {
+        throws SQLException, IOException, ServletException {
         Integer courseId = Integer.parseInt(request.getParameter("id"));
         Course course = courseDao.getCourseById(courseId);
 
