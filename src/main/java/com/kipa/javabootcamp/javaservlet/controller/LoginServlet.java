@@ -27,78 +27,78 @@ public class LoginServlet extends AbstractServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
+        throws ServletException {
         try {
             String action = request.getServletPath();
-            if(action.equals("/login")) {
-                getLogin(request, response);
-            } else if(action.equals("/account")) {
-                getAccount(request, response);
-            } else {
-                handleNotFound(request, response);
+            switch (action) {
+                case "/login":
+                    getLogin(request, response);
+                case "/account":
+                    getAccount(request, response);
+                default:
+                    handleNotFound(request, response);
             }
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             throw new ServletException(ex);
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
+        throws ServletException {
         try {
             String action = request.getServletPath();
-            if(action.equals("/login")) {
-                postLogin(request, response);
-            } else if(action.equals("/logout")) {
-                postLogout(request, response);
-            } else {
-                handleNotFound(request, response);
+            switch (action) {
+                case "/login":
+                    postLogin(request, response);
+                case "/logout":
+                    postLogout(request, response);
+                default:
+                    handleNotFound(request, response);
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             throw new ServletException(e);
         }
     }
 
-    private void getAccount(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        final Employee employee = (Employee) request.getSession().getAttribute("user");
+    private void getAccount(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+        Employee employee = (Employee) request.getSession().getAttribute("user");
 
         request.setAttribute("breadcrumbs", new ArrayList<Breadcrumb>(){{
             add(new Breadcrumb("Home", "/", "home"));
             add(new Breadcrumb(employee.getName().concat(" ("+ employee.getCode() +")"), null, "user"));
         }});
-
         request.setAttribute("page", new Page(employee.getName().concat(" | ".concat(Constanta._APP_NAME))) {{setPath("employee/detail");}});
         request.setAttribute("employee", employee);
-
         forward(request, response);
     }
 
     private void getLogin(HttpServletRequest request, HttpServletResponse response)
-        throws  ServletException, IOException, SQLException {
+        throws  ServletException, IOException {
         request.setAttribute("breadcrumbs", new ArrayList<Breadcrumb>(){{
             add(new Breadcrumb("Home", "/", "home"));
             add(new Breadcrumb("Login", "/login", "lock"));
         }});
         request.setAttribute("page", new Page("Login | ".concat(Constanta._APP_NAME)) {{setPath("login");}});
-
         forward(request, response);
     }
 
     private  void postLogout(HttpServletRequest request, HttpServletResponse response)
-        throws SQLException, ServletException, IOException {
+        throws IOException {
         HttpSession session = request.getSession();
         session.invalidate();
         request.setAttribute("message", new Message(
-                "You have been logged out",
-                "See you soon",
-                "info",
-                "mini",
-                "info"));
+            "You have been logged out",
+            "See you soon",
+            "info",
+            "mini",
+            "info"));
         response.sendRedirect("login");
     }
 
     private void postLogin(HttpServletRequest request, HttpServletResponse response)
-        throws SQLException, ServletException, IOException {
+        throws ServletException, IOException {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         Employee employee = employeeDao.authenticate(username, password);
@@ -107,11 +107,11 @@ public class LoginServlet extends AbstractServlet {
             response.sendRedirect("/");
         } else {
             request.setAttribute("message", new Message(
-                    "Sorry, your credentials doesn't match or exist",
-                    "Please check the credentials",
-                    "error",
-                    "mini",
-                    "warning"));
+                "Sorry, your credentials doesn't match or exist",
+                "Please check the credentials",
+                "error",
+                "mini",
+                "warning"));
             getLogin(request, response);
         }
     }

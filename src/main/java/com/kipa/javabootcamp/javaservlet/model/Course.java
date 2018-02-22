@@ -1,11 +1,13 @@
 package com.kipa.javabootcamp.javaservlet.model;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "course")
-public class Course {
+public class Course implements Serializable {
     @Id
     @Column(name = "course_id")
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -37,6 +39,15 @@ public class Course {
     @ManyToOne(optional=false)
     @JoinColumn(name="course_by",referencedColumnName="employee_id")
     private Employee courseBy;
+
+    @ManyToMany(fetch=FetchType.EAGER)
+    @JoinTable(name="employee_course",
+            joinColumns=
+            @JoinColumn(name="course_id", referencedColumnName="course_id"),
+            inverseJoinColumns=
+            @JoinColumn(name="employee_id", referencedColumnName="employee_id")
+    )
+    private List<Employee> participants;
 
     public Course(){}
 
@@ -110,5 +121,13 @@ public class Course {
 
     public void setCourseBy(Employee courseBy) {
         this.courseBy = courseBy;
+    }
+
+    public List<Employee> getParticipants() {
+        return participants;
+    }
+
+    public void setParticipants(List<Employee> participants) {
+        this.participants = participants;
     }
 }

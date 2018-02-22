@@ -11,5 +11,4 @@ public class JpaUtil {
     public static EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
-
 }

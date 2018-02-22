@@ -1,6 +1,8 @@
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c' %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@page import="java.util.Collection" %>
+<c:set var="loggedUser" value="${sessionScope.user}"/>
 
 <div class="ui segments bordernone">
     <div class="ui segment borderradiusless">
@@ -67,14 +69,26 @@
                         <a data-tooltip="Detail course" href="/course?id=${course.id}" class="circular ui basic icon mini button">
                             <i class="icon user"></i>
                         </a>
-                        <a data-tooltip="Edit course" href="/course/update?id=${course.id}" class="circular ui violet icon mini button">
+                        <a data-tooltip="Edit course" href="/course/update?id=${course.id}" class="circular ui basic icon mini button">
                             <i class="icon pencil"></i>
                         </a>
                         <button onclick="document.getElementById(${course.id}+'deleteform').submit()" data-tooltip="Delete course" class="circular ui red icon mini button">
                             <i class="icon trash"></i>
                         </button>
+                        <c:if test="${fn:length(course.participants) < 1 || (fn:length(course.participants) > 0 && !course.participants.stream().anyMatch(x -> (x.id).equals(loggedUser.id)).get())}">
+                            <button onclick="document.getElementById(${course.id}+'enrollform').submit()" data-tooltip="Enroll course" class="circular ui violet icon mini button">
+                                <i class="icon sign in alternate"></i>
+                            </button>
+                        </c:if>
+                        <c:if test="${fn:length(course.participants) > 0 && course.participants.stream().anyMatch(x -> (x.id).equals(loggedUser.id)).get()}">
+                            <button onclick="document.getElementById(${course.id}+'disenrollform').submit()" data-tooltip="Disenroll course" class="circular ui violet icon mini button">
+                                <i class="icon sign out alternate"></i>
+                            </button>
+                        </c:if>
                     </td>
                     <form id="${course.id}deleteform" action="/course/delete?id=${course.id}" method="post"></form>
+                    <form id="${course.id}enrollform" action="/course/enrollment?enroll_type=enroll&employee_id=${loggedUser.id}&course_id=${course.id}" method="post"></form>
+                    <form id="${course.id}disenrollform" action="/course/enrollment?enroll_type=disenroll&employee_id=${loggedUser.id}&course_id=${course.id}" method="post"></form>
                 </tr>
             </c:forEach>
             </tbody>

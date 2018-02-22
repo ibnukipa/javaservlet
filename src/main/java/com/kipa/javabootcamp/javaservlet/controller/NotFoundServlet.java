@@ -18,11 +18,13 @@ public class NotFoundServlet extends AbstractServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
         handleError(request, response);
     }
 
-    private void handleError(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void handleError(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
         request.setAttribute("breadcrumbs", new ArrayList<Breadcrumb>() {{
             add(new Breadcrumb("Home", "/", "home"));
             add(new Breadcrumb("404 - Not Found", "/notfound", "warning sign"));

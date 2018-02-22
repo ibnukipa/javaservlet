@@ -14,12 +14,17 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-@WebServlet({"/course", "/course/create", "/course/update", "/course/delete"})
+@WebServlet({
+        "/course",
+        "/course/create",
+        "/course/update",
+        "/course/delete",
+        "/course/enrollment"
+})
 public class CourseServlet extends AbstractServlet {
     private CourseDao courseDao = new CourseDao();
     private EmployeeDao employeeDao = new EmployeeDao();
@@ -41,14 +46,17 @@ public class CourseServlet extends AbstractServlet {
         throws ServletException {
         try {
             String action = request.getServletPath();
-            if(action.equals("/course/create")) {
-                postCreateCourse(request, response);
-            } else if(action.equals("/course/update")) {
-                postUpdateCourse(request, response);
-            } else if(action.equals("/course/delete")) {
-                postDeleteCourse(request, response);
-            } else {
-                handleNotFound(request, response);
+            switch (action) {
+                case "/course/create":
+                    postCreateCourse(request, response);
+                case "/course/update":
+                    postUpdateCourse(request, response);
+                case "/course/delete":
+                    postDeleteCourse(request, response);
+                case "/course/enrollment":
+                    postEmployeeEnrollment(request, response);
+                default:
+                    handleNotFound(request, response);
             }
         } catch (Exception ex) {
             throw new ServletException(ex);
@@ -60,18 +68,20 @@ public class CourseServlet extends AbstractServlet {
         throws ServletException {
         try {
             String action = request.getServletPath();
-            if(action.equals("/course/create")) {
-                getCreateCourse(request, response);
-            } else if(action.equals("/course/update")) {
-                getUpdateCourse(request, response);
-            } else if(action.equals("/course/delete")) {
-                handleNotFound(request, response);
-            } else {
-                if(request.getParameter("id") != null && Integer.parseInt(request.getParameter("id")) > 0) {
-                    getCourse(request, response);
-                } else {
-                    getCourses(request, response);
-                }
+            switch (action) {
+                case "/course/create":
+                    getCreateCourse(request, response);
+                case "/course/update":
+                    getUpdateCourse(request, response);
+                case "/course/delete":
+                case "/course/enrollment":
+                    handleNotFound(request, response);
+                default:
+                    if(request.getParameter("id") != null && Integer.parseInt(request.getParameter("id")) > 0) {
+                        getCourse(request, response);
+                    } else {
+                        getCourses(request, response);
+                    }
             }
         } catch (Exception ex) {
             throw new ServletException(ex);
@@ -185,6 +195,59 @@ public class CourseServlet extends AbstractServlet {
             request.setAttribute("message", new Message(
                     "Course "+ course.getName() +" has been DELETED",
                     "#"+course.getCode()+" - "+course.getName(),
+                    "success",
+                    "mini",
+                    "checkmark"));
+            getCourses(request, response);
+        }
+    }
+
+    private void postEmployeeEnrollment(HttpServletRequest request, HttpServletResponse response)
+        throws IOException, ServletException {
+        Integer courseId = Integer.parseInt(request.getParameter("course_id"));
+        Integer employeeId = Integer.parseInt(request.getParameter("employee_id"));
+        String typeEnrollment = request.getParameter("enroll_type");
+        Employee employee = employeeDao.getEmployeeById(employeeId);
+        Course course = courseDao.getCourseById(courseId);
+
+        Boolean isParticipate = course != null && course.getParticipants().stream().anyMatch(x -> (x.getId()).equals(employeeId));
+        Boolean isEnroll = typeEnrollment.equals("enroll");
+        if (employee == null || course == null) {
+            handleNotFound(request, response);
+        } else if(isParticipate && isEnroll) {
+            request.setAttribute("message", new Message(
+                "You have been enroll this course : "+ course.getName(),
+                "",
+                "warning",
+                "mini",
+                "warning"));
+            getCourses(request, response);
+        } else if(!isParticipate && !isEnroll){
+            request.setAttribute("message", new Message(
+                "You haven't enroll this course : "+ course.getName(),
+                "",
+                "warning",
+                "mini",
+                "warning"));
+            getCourses(request, response);
+        } else {
+            List<Employee> participants = course.getParticipants();
+
+            if(isEnroll){
+                System.out.println("enroll");
+                participants.add(employee);
+            } else {
+                System.out.println("disenroll");
+                participants.removeIf(x -> x.getId().equals(employeeId));
+            }
+
+            System.out.println(participants.size());
+            course.setParticipants(participants);
+            courseDao.update(course);
+
+            request.setAttribute("message", new Message(
+                    "You have been "+typeEnrollment +" "+ course.getName(),
+                    "",
                     "success",
                     "mini",
                     "checkmark"));

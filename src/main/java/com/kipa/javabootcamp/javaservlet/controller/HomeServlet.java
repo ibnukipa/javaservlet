@@ -21,7 +21,7 @@ public class HomeServlet extends AbstractServlet {
     }
 
     private void getHome(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+        throws ServletException, IOException {
         request.setAttribute("breadcrumbs", new ArrayList<Breadcrumb>() {{
             add(new Breadcrumb("Home", "/", "home"));
         }});

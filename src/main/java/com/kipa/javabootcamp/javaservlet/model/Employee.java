@@ -1,11 +1,13 @@
 package com.kipa.javabootcamp.javaservlet.model;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "employee")
-public class Employee {
+public class Employee implements Serializable {
     @Id
     @Column(name = "employee_id")
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -38,6 +40,9 @@ public class Employee {
     @OneToMany(mappedBy="courseBy",targetEntity=Course.class,
             fetch=FetchType.EAGER)
     private Collection classes;
+
+    @ManyToMany(mappedBy="participants",fetch=FetchType.EAGER)
+    private List<Course> courses;
 
     public Employee(){}
 
@@ -119,5 +124,13 @@ public class Employee {
 
     public void setClasses(Collection classes) {
         this.classes = classes;
+    }
+
+    public List<Course> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(List<Course> courses) {
+        this.courses = courses;
     }
 }

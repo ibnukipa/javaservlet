@@ -16,7 +16,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-@WebServlet({"/employee", "/employee/create", "/employee/update", "/employee/delete"})
+@WebServlet({
+        "/employee",
+        "/employee/create",
+        "/employee/update",
+        "/employee/delete"
+})
 public class EmployeeServlet extends AbstractServlet {
     private EmployeeDao employeeDao = new EmployeeDao();
 
@@ -35,17 +40,18 @@ public class EmployeeServlet extends AbstractServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
+        throws ServletException {
         try {
             String action = request.getServletPath();
-            if(action.equals("/employee/create")) {
-                postCreateEmployee(request, response);
-            } else if(action.equals("/employee/update")) {
-                postUpdateEmployee(request, response);
-            } else if(action.equals("/employee/delete")) {
-                postDeleteEmployee(request, response);
-            } else {
-                handleNotFound(request, response);
+            switch (action) {
+                case "/employee/create":
+                    postCreateEmployee(request, response);
+                case "/employee/update":
+                    postUpdateEmployee(request, response);
+                case "/employee/delete":
+                    postDeleteEmployee(request, response);
+                default:
+                    handleNotFound(request, response);
             }
         } catch (Exception ex) {
             throw new ServletException(ex);
@@ -57,18 +63,19 @@ public class EmployeeServlet extends AbstractServlet {
         throws ServletException {
         try {
             String action = request.getServletPath();
-            if(action.equals("/employee/create")) {
-                getCreateEmployee(request, response);
-            } else if(action.equals("/employee/update")) {
-                getUpdateEmployee(request, response);
-            } else if(action.equals("/employee/delete")) {
-                handleNotFound(request, response);
-            } else {
-                if(request.getParameter("id") != null && Integer.parseInt(request.getParameter("id")) > 0) {
-                    getEmployee(request, response);
-                } else {
-                    getEmployees(request, response);
-                }
+            switch (action) {
+                case "/employee/create":
+                    getCreateEmployee(request, response);
+                case "/employee/update":
+                    getUpdateEmployee(request, response);
+                case "/employee/delete":
+                    handleNotFound(request, response);
+                default:
+                    if(request.getParameter("id") != null && Integer.parseInt(request.getParameter("id")) > 0) {
+                        getEmployee(request, response);
+                    } else {
+                        getEmployees(request, response);
+                    }
             }
         } catch (Exception ex) {
             throw new ServletException(ex);
@@ -151,7 +158,7 @@ public class EmployeeServlet extends AbstractServlet {
     }
 
     private void postUpdateEmployee(HttpServletRequest request, HttpServletResponse response)
-        throws SQLException, IOException, ServletException {
+        throws IOException, ServletException {
         Employee employee = convertRequestToEmployee(request);
         employee.setId(Integer.parseInt(request.getParameter("employee_id")));
         employeeDao.update(employee);
@@ -166,7 +173,7 @@ public class EmployeeServlet extends AbstractServlet {
     }
 
     private void postDeleteEmployee(HttpServletRequest request, HttpServletResponse response)
-        throws SQLException, IOException, ServletException {
+        throws IOException, ServletException {
         Integer employeeId = Integer.parseInt(request.getParameter("id"));
         Employee employee = employeeDao.getEmployeeById(employeeId);
 
