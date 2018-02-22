@@ -1,6 +1,7 @@
 package com.kipa.javabootcamp.javaservlet.model;
 
 import javax.persistence.*;
+import java.util.Collection;
 
 @Entity
 @Table(name = "employee")
@@ -33,6 +34,10 @@ public class Employee {
 
     @Column(name = "employee_stream")
     private String stream;
+
+    @OneToMany(mappedBy="courseBy",targetEntity=Course.class,
+            fetch=FetchType.EAGER)
+    private Collection classes;
 
     public Employee(){}
 
@@ -106,5 +111,13 @@ public class Employee {
 
     public void setStream(String stream) {
         this.stream = stream;
+    }
+
+    public Collection getClasses() {
+        return classes;
+    }
+
+    public void setClasses(Collection classes) {
+        this.classes = classes;
     }
 }

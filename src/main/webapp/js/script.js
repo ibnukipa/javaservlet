@@ -31,7 +31,12 @@ $(document).ready(function () {
         })
     ;
 
-    $(".dropdown").dropdown({
-        direction: "downward"
+    $('.calendar.course').calendar({
+        type: 'datetime',
+        ampm: false
+    });
+
+    $('.dropdown').dropdown({
+        direction: 'downward'
     });
 });

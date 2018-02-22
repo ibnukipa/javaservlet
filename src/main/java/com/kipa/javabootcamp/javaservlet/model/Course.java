@@ -34,8 +34,9 @@ public class Course {
     @Column(name = "course_place")
     private String place;
 
-    @Column(name = "course_by")
-    private String by;
+    @ManyToOne(optional=false)
+    @JoinColumn(name="course_by",referencedColumnName="employee_id")
+    private Employee courseBy;
 
     public Course(){}
 
@@ -103,11 +104,11 @@ public class Course {
         this.place = place;
     }
 
-    public String getBy() {
-        return by;
+    public Employee getCourseBy() {
+        return courseBy;
     }
 
-    public void setBy(String by) {
-        this.by = by;
+    public void setCourseBy(Employee courseBy) {
+        this.courseBy = courseBy;
     }
 }

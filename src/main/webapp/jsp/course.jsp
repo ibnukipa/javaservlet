@@ -29,6 +29,13 @@
             </tr>
             </thead>
             <tbody>
+            <c:if test="${empty courses}">
+                <tr>
+                    <td colspan="4" class="center aligned" style="font-style: italic">
+                        - No data to display-
+                    </td>
+                </tr>
+            </c:if>
             <c:forEach var="course" items="${courses}">
                 <tr>
                     <td>
@@ -50,7 +57,7 @@
                     </td>
                     <td>
                         <div class="ui tiny header">
-                            ${course.by}
+                            ${course.courseBy.name}
                             <div class="sub header">
                                 at ${course.place}
                             </div>

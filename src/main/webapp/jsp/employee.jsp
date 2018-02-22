@@ -28,6 +28,13 @@
                 </tr>
             </thead>
             <tbody>
+                <c:if test="${empty employees}">
+                    <tr>
+                        <td colspan="4" class="center aligned" style="font-style: italic">
+                            - No data to display -
+                        </td>
+                    </tr>
+                </c:if>
                 <c:forEach var="employee" items="${employees}">
                     <tr>
                         <td>
