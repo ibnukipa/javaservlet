@@ -102,7 +102,7 @@ public class EmployeeServlet extends AbstractServlet {
     private void getEmployee(HttpServletRequest request, HttpServletResponse response)
         throws IOException, ServletException {
         Integer employeeId = Integer.parseInt(request.getParameter("id"));
-        final Employee employee = employeeDao.getEmployeeById(employeeId);
+        Employee employee = employeeDao.getEmployeeById(employeeId);
 
         if(employee == null) {
             handleNotFound(request, response);
@@ -145,7 +145,7 @@ public class EmployeeServlet extends AbstractServlet {
     private void getUpdateEmployee(HttpServletRequest request, HttpServletResponse response)
         throws IOException, ServletException {
         Integer employeeId = Integer.parseInt(request.getParameter("id"));
-        final Employee employee = employeeDao.getEmployeeById(employeeId);
+        Employee employee = employeeDao.getEmployeeById(employeeId);
 
         if(employee == null) {
             handleNotFound(request, response);
@@ -163,13 +163,17 @@ public class EmployeeServlet extends AbstractServlet {
 
     private void postUpdateEmployee(HttpServletRequest request, HttpServletResponse response)
         throws IOException, ServletException {
-        Employee employee = convertRequestToEmployee(request);
-        employee.setId(Integer.parseInt(request.getParameter("employee_id")));
-        employeeDao.update(employee);
+        Integer updatedEmployeeId = Integer.parseInt(request.getParameter("employee_id"));
+        Employee choosenEmployee = employeeDao.getEmployeeById(updatedEmployeeId);
 
+        Employee updatedEmployee = convertRequestToEmployee(request);
+        updatedEmployee.setId(updatedEmployeeId);
+        updatedEmployee.setAudit(choosenEmployee.getAudit());
+
+        employeeDao.update(updatedEmployee);
         request.setAttribute("message", new Message(
-            "Employee "+ employee.getName() +" has been UPDATED",
-            "#"+employee.getCode()+" - "+employee.getName()+" ("+employee.getGrade()+" - "+employee.getStream()+")",
+            "Employee "+ updatedEmployee.getName() +" has been UPDATED",
+            "#"+updatedEmployee.getCode()+" - "+updatedEmployee.getName()+" ("+updatedEmployee.getGrade()+" - "+updatedEmployee.getStream()+")",
             "success",
             "mini",
             "checkmark"));

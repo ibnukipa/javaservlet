@@ -1,5 +1,9 @@
 package com.kipa.javabootcamp.javaservlet.model;
 
+import com.kipa.javabootcamp.javaservlet.listener.AuditListener;
+import com.kipa.javabootcamp.javaservlet.unit.Audit;
+import com.kipa.javabootcamp.javaservlet.unit.Auditable;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Collection;
@@ -7,11 +11,15 @@ import java.util.List;
 
 @Entity
 @Table(name = "employee")
-public class Employee implements Serializable {
+@EntityListeners(AuditListener.class)
+public class Employee implements Auditable, Serializable {
     @Id
     @Column(name = "employee_id")
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer id;
+
+    @Embedded
+    private Audit audit;
 
     @Column(name = "employee_code")
     private String code;
@@ -132,5 +140,15 @@ public class Employee implements Serializable {
 
     public void setCourses(List<Course> courses) {
         this.courses = courses;
+    }
+
+    @Override
+    public Audit getAudit() {
+        return this.audit;
+    }
+
+    @Override
+    public void setAudit(Audit audit) {
+        this.audit = audit;
     }
 }
