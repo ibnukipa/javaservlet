@@ -1,5 +1,7 @@
 package com.kipa.javabootcamp.javaservlet.model;
 
+import com.kipa.javabootcamp.javaservlet.unit.Type;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -17,7 +19,7 @@ public class Course implements Serializable {
     private String code;
 
     @Column(name = "course_type")
-    private String type;
+    private Type type;
 
     @Column(name = "course_name")
     private String name;
@@ -91,11 +93,11 @@ public class Course implements Serializable {
         this.endDate = endDate;
     }
 
-    public String getType() {
+    public Type getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(Type type) {
         this.type = type;
     }
 

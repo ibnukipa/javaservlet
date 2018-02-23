@@ -8,6 +8,7 @@ import com.kipa.javabootcamp.javaservlet.dao.CourseDao;
 import com.kipa.javabootcamp.javaservlet.dao.EmployeeDao;
 import com.kipa.javabootcamp.javaservlet.model.Course;
 import com.kipa.javabootcamp.javaservlet.model.Employee;
+import com.kipa.javabootcamp.javaservlet.unit.Type;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -32,7 +33,7 @@ public class CourseServlet extends AbstractServlet {
     private Course convertRequestToCourse(HttpServletRequest request) throws Exception {
         Course course = new Course();
         course.setCode(request.getParameter("course_code"));
-        course.setType(request.getParameter("course_type"));
+        course.setType(Type.valueOf(request.getParameter("course_type")));
         course.setName(request.getParameter("course_name"));
         course.setDescription(request.getParameter("course_description"));
         course.setStartDate(new SimpleDateFormat("MMMMM dd, yyyy h:mm").parse(request.getParameter("course_startDate")));
