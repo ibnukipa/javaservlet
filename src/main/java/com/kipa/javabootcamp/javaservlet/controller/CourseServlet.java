@@ -239,14 +239,11 @@ public class CourseServlet extends AbstractServlet {
             List<Employee> participants = course.getParticipants();
 
             if(isEnroll){
-                System.out.println("enroll");
                 participants.add(employee);
             } else {
-                System.out.println("disenroll");
                 participants.removeIf(x -> x.getId().equals(employeeId));
             }
 
-            System.out.println(participants.size());
             course.setParticipants(participants);
             courseDao.update(course);
 
