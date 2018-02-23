@@ -33,10 +33,13 @@ public class LoginServlet extends AbstractServlet {
             switch (action) {
                 case "/login":
                     getLogin(request, response);
+                    break;
                 case "/account":
                     getAccount(request, response);
+                    break;
                 default:
                     handleNotFound(request, response);
+                    break;
             }
         } catch (Exception ex) {
             throw new ServletException(ex);
@@ -51,10 +54,13 @@ public class LoginServlet extends AbstractServlet {
             switch (action) {
                 case "/login":
                     postLogin(request, response);
+                    break;
                 case "/logout":
                     postLogout(request, response);
+                    break;
                 default:
                     handleNotFound(request, response);
+                    break;
             }
         } catch (Exception e) {
             throw new ServletException(e);

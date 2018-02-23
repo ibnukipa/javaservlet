@@ -46,12 +46,16 @@ public class EmployeeServlet extends AbstractServlet {
             switch (action) {
                 case "/employee/create":
                     postCreateEmployee(request, response);
+                    break;
                 case "/employee/update":
                     postUpdateEmployee(request, response);
+                    break;
                 case "/employee/delete":
                     postDeleteEmployee(request, response);
+                    break;
                 default:
                     handleNotFound(request, response);
+                    break;
             }
         } catch (Exception ex) {
             throw new ServletException(ex);

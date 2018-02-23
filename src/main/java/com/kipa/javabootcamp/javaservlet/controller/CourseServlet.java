@@ -49,14 +49,19 @@ public class CourseServlet extends AbstractServlet {
             switch (action) {
                 case "/course/create":
                     postCreateCourse(request, response);
+                    break;
                 case "/course/update":
                     postUpdateCourse(request, response);
+                    break;
                 case "/course/delete":
                     postDeleteCourse(request, response);
+                    break;
                 case "/course/enrollment":
                     postEmployeeEnrollment(request, response);
+                    break;
                 default:
                     handleNotFound(request, response);
+                    break;
             }
         } catch (Exception ex) {
             throw new ServletException(ex);
