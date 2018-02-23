@@ -9,7 +9,10 @@ import com.kipa.javabootcamp.javaservlet.dao.EmployeeDao;
 import com.kipa.javabootcamp.javaservlet.model.Course;
 import com.kipa.javabootcamp.javaservlet.model.Employee;
 import com.kipa.javabootcamp.javaservlet.unit.Type;
+import com.kipa.javabootcamp.javaservlet.util.JpaUtil;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +30,8 @@ import java.util.List;
         "/course/enrollment"
 })
 public class CourseServlet extends AbstractServlet {
+    EntityManager entityManager = JpaUtil.getEntityManager();
+
     private CourseDao courseDao = new CourseDao();
     private EmployeeDao employeeDao = new EmployeeDao();
 
@@ -110,7 +115,7 @@ public class CourseServlet extends AbstractServlet {
     private void getCourse(HttpServletRequest request, HttpServletResponse response)
         throws IOException, ServletException {
         Integer courseId = Integer.parseInt(request.getParameter("id"));
-        final Course course = courseDao.getCourseById(courseId);
+        Course course = courseDao.getCourseById(courseId);
         if(course == null) {
             handleNotFound(request, response);
         } else {
@@ -155,7 +160,7 @@ public class CourseServlet extends AbstractServlet {
     private void getUpdateCourse(HttpServletRequest request, HttpServletResponse response)
         throws IOException, ServletException {
         Integer courseId = Integer.parseInt(request.getParameter("id"));
-        final Course course = courseDao.getCourseById(courseId);
+        Course course = courseDao.getCourseById(courseId);
 
         if(course == null) {
             handleNotFound(request, response);
@@ -174,18 +179,22 @@ public class CourseServlet extends AbstractServlet {
 
     private void postUpdateCourse(HttpServletRequest request, HttpServletResponse response)
         throws Exception {
-        Course course = this.convertRequestToCourse(request);
-        course.setId(Integer.parseInt(request.getParameter("course_id")));
+        Integer updatedCourseId = Integer.parseInt(request.getParameter("course_id"));
+        Course choosenCourse = courseDao.getCourseById(updatedCourseId);
         Employee courseBy = employeeDao.getEmployeeById(Integer.parseInt(request.getParameter("course_by")));
-        course.setCourseBy(courseBy);
-        courseDao.update(course);
 
+        Course updatedCourse = this.convertRequestToCourse(request);
+        updatedCourse.setCourseBy(courseBy);
+        updatedCourse.setId(updatedCourseId);
+        updatedCourse.setAudit(choosenCourse.getAudit());
+
+        courseDao.update(updatedCourse);
         request.setAttribute("message", new Message(
-                "Course "+ course.getName() +" has been UPDATED",
-                "#"+course.getCode()+" - "+course.getName(),
-                "success",
-                "mini",
-                "checkmark"));
+            "Course "+ updatedCourse.getName() +" has been UPDATED",
+            "#"+updatedCourse.getCode()+" - "+updatedCourse.getName(),
+            "success",
+            "mini",
+            "checkmark"));
         getCourses(request, response);
     }
 
@@ -199,11 +208,11 @@ public class CourseServlet extends AbstractServlet {
         } else {
             courseDao.delete(course);
             request.setAttribute("message", new Message(
-                    "Course "+ course.getName() +" has been DELETED",
-                    "#"+course.getCode()+" - "+course.getName(),
-                    "success",
-                    "mini",
-                    "checkmark"));
+                "Course "+ course.getName() +" has been DELETED",
+                "#"+course.getCode()+" - "+course.getName(),
+                "success",
+                "mini",
+                "checkmark"));
             getCourses(request, response);
         }
     }
@@ -249,11 +258,11 @@ public class CourseServlet extends AbstractServlet {
             courseDao.update(course);
 
             request.setAttribute("message", new Message(
-                    "You have been "+typeEnrollment +" "+ course.getName(),
-                    "",
-                    "success",
-                    "mini",
-                    "checkmark"));
+                "You have been "+typeEnrollment +" "+ course.getName(),
+                "",
+                "success",
+                "mini",
+                "checkmark"));
             getCourses(request, response);
         }
     }

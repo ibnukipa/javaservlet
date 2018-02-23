@@ -72,10 +72,10 @@
                             <i class="dropdown icon"></i>
                             <div class="default text">Course Type</div>
                             <div class="menu">
-                                <div class="item" data-value="fixed">
+                                <div class="item" data-value="FIXED">
                                     Fixed
                                 </div>
-                                <div class="item" data-value="periodic">
+                                <div class="item" data-value="PERIODIC">
                                     Periodic
                                 </div>
                             </div>
