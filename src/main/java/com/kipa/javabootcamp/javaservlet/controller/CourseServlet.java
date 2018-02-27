@@ -252,13 +252,23 @@ public class CourseServlet extends AbstractServlet {
             course.setParticipants(participants);
             courseDao.update(course);
 
-            request.setAttribute("message", new Message(
-                "You have been "+typeEnrollment +" "+ course.getName(),
-                "",
-                "success",
-                "mini",
-                "checkmark"));
-            getCourses(request, response);
+            if(typeEnrollment.equals("removeparticipant")) {
+                request.setAttribute("message", new Message(
+                    "You have been delete "+ employee.getName() +" from "+ course.getName() +" participants",
+                    "",
+                    "success",
+                    "mini",
+                    "checkmark"));
+                getCourse(request, response);
+            } else {
+                request.setAttribute("message", new Message(
+                    "You have been "+typeEnrollment +" "+ course.getName(),
+                    "",
+                    "success",
+                    "mini",
+                    "checkmark"));
+                getCourses(request, response);
+            }
         }
     }
 }

@@ -63,7 +63,7 @@
                         </td>
                         <td class="center aligned">
                             <a data-tooltip="Detail user" href="/employee?id=${employee.id}" class="circular ui basic icon mini button">
-                                <i class="icon user"></i>
+                                <i class="icon eye"></i>
                             </a>
                             <a data-tooltip="Edit user" href="/employee/update?id=${employee.id}" class="circular ui violet icon mini button">
                                 <i class="icon pencil"></i>

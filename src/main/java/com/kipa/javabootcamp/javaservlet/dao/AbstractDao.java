@@ -15,6 +15,8 @@ public abstract class AbstractDao<T> {
             entityManager.getTransaction().commit();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            entityManager.close();
         }
     }
 
@@ -26,6 +28,8 @@ public abstract class AbstractDao<T> {
             entityManager.getTransaction().commit();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            entityManager.close();
         }
     }
 
@@ -37,6 +41,8 @@ public abstract class AbstractDao<T> {
             entityManager.getTransaction().commit();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            entityManager.close();
         }
     }
 }

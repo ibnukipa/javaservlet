@@ -44,11 +44,14 @@ public class Employee implements IAuditable, Serializable {
     @Column(name = "employee_stream")
     private String stream;
 
-    @OneToMany(mappedBy="courseBy",targetEntity=Course.class,
+    @OneToMany(mappedBy="courseBy",
+            targetEntity=Course.class,
             fetch=FetchType.LAZY)
     private Collection classes;
 
-    @ManyToMany(mappedBy="participants", cascade = {CascadeType.ALL})
+    @ManyToMany(mappedBy="participants",
+            cascade = {CascadeType.ALL},
+            fetch = FetchType.EAGER)
     private List<Course> courses;
 
     public Employee(){}

@@ -43,7 +43,7 @@ public class Course implements IAuditable, Serializable {
     @Column(name = "course_place")
     private String place;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name="course_by",referencedColumnName="employee_id")
     private Employee courseBy;
 

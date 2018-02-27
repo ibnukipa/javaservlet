@@ -1,10 +1,12 @@
+<%@ page import="com.kipa.javabootcamp.javaservlet.model.Employee" %>
+<%@ page import="java.util.List" %>
+<%@ page import="com.kipa.javabootcamp.javaservlet.model.Course" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c' %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@page import="java.util.Collection" %>
-<c:set var="loggedUser" value="${sessionScope.user}"/>
 
-<c:set var="courses" value="${requestScope.courses}"/>
+<c:set var="loggedUser" value='<%=(Employee) session.getAttribute("user")%>'/>
+<c:set var="courses" value='<%=(List<Course>) request.getAttribute("courses")%>'/>
 
 <div class="ui segments bordernone">
     <div class="ui segment borderradiusless">
@@ -69,7 +71,7 @@
                     </td>
                     <td class="center aligned">
                         <a data-tooltip="Detail course" href="/course?id=${course.id}" class="circular ui basic icon mini button">
-                            <i class="icon user"></i>
+                            <i class="icon eye"></i>
                         </a>
                         <a data-tooltip="Edit course" href="/course/update?id=${course.id}" class="circular ui basic icon mini button">
                             <i class="icon pencil"></i>
