@@ -16,7 +16,7 @@ public abstract class AbstractServlet extends HttpServlet {
     private static final String VIEW_PREFIX = "/jsp";
     private static final String VIEW_SUFFIX = ".jsp";
 
-    static String getTemplatePath(String path)
+    private static String getTemplatePath(String path)
     {
         if (path.equalsIgnoreCase("/"))
         {

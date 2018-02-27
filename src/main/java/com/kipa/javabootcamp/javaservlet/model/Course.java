@@ -1,8 +1,6 @@
 package com.kipa.javabootcamp.javaservlet.model;
 
 import com.kipa.javabootcamp.javaservlet.listener.AuditListener;
-import com.kipa.javabootcamp.javaservlet.unit.Audit;
-import com.kipa.javabootcamp.javaservlet.unit.Auditable;
 import com.kipa.javabootcamp.javaservlet.unit.Type;
 
 import javax.persistence.*;
@@ -13,14 +11,14 @@ import java.util.List;
 @Entity
 @Table(name = "course")
 @EntityListeners(AuditListener.class)
-public class Course implements Auditable, Serializable {
+public class Course implements IAuditable, Serializable {
     @Id
     @Column(name = "course_id")
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer id;
 
     @Embedded
-    private Audit audit;
+    private EmbedAudit audit;
 
     @Column(name = "course_code")
     private String code;
@@ -45,17 +43,14 @@ public class Course implements Auditable, Serializable {
     @Column(name = "course_place")
     private String place;
 
-    @ManyToOne(optional=false)
+    @ManyToOne
     @JoinColumn(name="course_by",referencedColumnName="employee_id")
     private Employee courseBy;
 
-    @ManyToMany(fetch=FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name="employee_course",
-            joinColumns=
-            @JoinColumn(name="course_id", referencedColumnName="course_id"),
-            inverseJoinColumns=
-            @JoinColumn(name="employee_id", referencedColumnName="employee_id")
-    )
+            joinColumns= {@JoinColumn(name="course_id", referencedColumnName="course_id")},
+            inverseJoinColumns= {@JoinColumn(name="employee_id", referencedColumnName="employee_id")})
     private List<Employee> participants;
 
     public Course(){}
@@ -141,12 +136,12 @@ public class Course implements Auditable, Serializable {
     }
 
     @Override
-    public Audit getAudit() {
+    public EmbedAudit getAudit() {
         return this.audit;
     }
 
     @Override
-    public void setAudit(Audit audit) {
+    public void setAudit(EmbedAudit audit) {
         this.audit = audit;
     }
 }

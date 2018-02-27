@@ -1,3 +1,7 @@
+<%@ taglib prefix='c' uri='http://java.sun.com/jsp/jstl/core' %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
 <div class="ui segments bordernone">
     <div class="ui clearing segment borderradiusless">
         <div class="ui small header left floated aligned nomargin">
@@ -26,91 +30,49 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>
-                        <div class="ui tiny header">
-                            Low Intermediate II
-                            <div class="sub header">
-                                by John Doe
+                <c:if test="${empty courses}">
+                    <tr>
+                        <td colspan="2" class="center aligned" style="font-style: italic">
+                            - No data to display -
+                        </td>
+                    </tr>
+                </c:if>
+                <c:forEach var="course" items="${courses}">
+                    <tr>
+                        <td>
+                            <div class="ui tiny header">
+                                ${course.name}
+                                <div class="sub header">
+                                    by ${course.courseBy.name}
+                                </div>
                             </div>
-                        </div>
-                    </td>
-                    <td class="center aligned collapsing">
-                        <div class="ui tiny header">
-                            5.30 PM - 7 PM
-                            <div class="sub header">
-                                every Monday
+                        </td>
+                        <td class="center aligned collapsing">
+                            <div class="ui tiny header">
+                                <c:choose>
+                                    <c:when test="${course.type eq 'FIXED'}">
+                                        <fmt:formatDate pattern = "MMM, dd YYYY" value = "${course.startDate}" />
+                                        -
+                                        <fmt:formatDate pattern = "MMM, dd YYYY" value = "${course.endDate}" />
+                                        <div class="sub header">
+                                            <fmt:formatDate pattern = "HH:mm a" value = "${course.startDate}" />
+                                            -
+                                            <fmt:formatDate pattern = "HH:mm a" value = "${course.endDate}" />
+                                        </div>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <fmt:formatDate pattern = "HH:mm a" value = "${course.startDate}" />
+                                        -
+                                        <fmt:formatDate pattern = "HH:mm a" value = "${course.endDate}" />
+                                        <div class="sub header">
+                                            every <fmt:formatDate pattern = "EEEE" value = "${course.startDate}" />
+                                        </div>
+                                    </c:otherwise>
+                                </c:choose>
                             </div>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="ui tiny header">
-                            PGCP - Software Testing (Good Level) Q12018
-                            <div class="sub header">
-                                by Mark Zuckerberg
-                            </div>
-                        </div>
-                    </td>
-                    <td class="center aligned collapsing">
-                        <div class="ui tiny header">
-                            8 AM - 5 PM
-                            <div class="sub header">
-                                8 - 9 Mei 2018
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
-        <table class="ui celled striped table">
-            <thead>
-            <tr>
-                <th colspan="2">
-                    <i class="star icon"></i>
-                    Projects
-                </th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>
-                    <div class="ui tiny header">
-                        Facebook Ads
-                        <div class="sub header">
-                            by Mark Zuckerberg
-                        </div>
-                    </div>
-                </td>
-                <td class="center aligned collapsing">
-                    <div class="ui tiny header">
-                        2 Months
-                        <div class="sub header">
-                            Remote work
-                        </div>
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <div class="ui tiny header">
-                        Apple Security
-                        <div class="sub header">
-                            by Steve Jobs
-                        </div>
-                    </div>
-                </td>
-                <td class="center aligned collapsing">
-                    <div class="ui tiny header">
-                        6 Months
-                        <div class="sub header">
-                            Onsite work
-                        </div>
-                    </div>
-                </td>
-            </tr>
+                        </td>
+                    </tr>
+                </c:forEach>
             </tbody>
         </table>
     </div>

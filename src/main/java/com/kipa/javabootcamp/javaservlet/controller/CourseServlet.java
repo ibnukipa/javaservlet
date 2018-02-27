@@ -9,10 +9,7 @@ import com.kipa.javabootcamp.javaservlet.dao.EmployeeDao;
 import com.kipa.javabootcamp.javaservlet.model.Course;
 import com.kipa.javabootcamp.javaservlet.model.Employee;
 import com.kipa.javabootcamp.javaservlet.unit.Type;
-import com.kipa.javabootcamp.javaservlet.util.JpaUtil;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -30,22 +27,8 @@ import java.util.List;
         "/course/enrollment"
 })
 public class CourseServlet extends AbstractServlet {
-    EntityManager entityManager = JpaUtil.getEntityManager();
-
     private CourseDao courseDao = new CourseDao();
     private EmployeeDao employeeDao = new EmployeeDao();
-
-    private Course convertRequestToCourse(HttpServletRequest request) throws Exception {
-        Course course = new Course();
-        course.setCode(request.getParameter("course_code"));
-        course.setType(Type.valueOf(request.getParameter("course_type")));
-        course.setName(request.getParameter("course_name"));
-        course.setDescription(request.getParameter("course_description"));
-        course.setStartDate(new SimpleDateFormat("MMMMM dd, yyyy h:mm").parse(request.getParameter("course_startDate")));
-        course.setEndDate(new SimpleDateFormat("MMMMM dd, yyyy h:mm").parse(request.getParameter("course_endDate")));
-        course.setPlace(request.getParameter("course_place"));
-        return course;
-    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -144,8 +127,16 @@ public class CourseServlet extends AbstractServlet {
 
     private void postCreateCourse(HttpServletRequest request, HttpServletResponse response)
         throws Exception {
-        Course course = this.convertRequestToCourse(request);
         Employee courseBy = employeeDao.getEmployeeById(Integer.parseInt(request.getParameter("course_by")));
+
+        Course course = new Course();
+        course.setCode(request.getParameter("course_code"));
+        course.setType(Type.valueOf(request.getParameter("course_type")));
+        course.setName(request.getParameter("course_name"));
+        course.setDescription(request.getParameter("course_description"));
+        course.setStartDate(new SimpleDateFormat("MMMMM dd, yyyy h:mm").parse(request.getParameter("course_startDate")));
+        course.setEndDate(new SimpleDateFormat("MMMMM dd, yyyy h:mm").parse(request.getParameter("course_endDate")));
+        course.setPlace(request.getParameter("course_place"));
         course.setCourseBy(courseBy);
         courseDao.create(course);
         request.setAttribute("message", new Message(
@@ -180,18 +171,22 @@ public class CourseServlet extends AbstractServlet {
     private void postUpdateCourse(HttpServletRequest request, HttpServletResponse response)
         throws Exception {
         Integer updatedCourseId = Integer.parseInt(request.getParameter("course_id"));
-        Course choosenCourse = courseDao.getCourseById(updatedCourseId);
         Employee courseBy = employeeDao.getEmployeeById(Integer.parseInt(request.getParameter("course_by")));
 
-        Course updatedCourse = this.convertRequestToCourse(request);
-        updatedCourse.setCourseBy(courseBy);
-        updatedCourse.setId(updatedCourseId);
-        updatedCourse.setAudit(choosenCourse.getAudit());
+        Course chosenCourse = courseDao.getCourseById(updatedCourseId);
+        chosenCourse.setCode(request.getParameter("course_code"));
+        chosenCourse.setType(Type.valueOf(request.getParameter("course_type")));
+        chosenCourse.setName(request.getParameter("course_name"));
+        chosenCourse.setDescription(request.getParameter("course_description"));
+        chosenCourse.setStartDate(new SimpleDateFormat("MMMMM dd, yyyy h:mm").parse(request.getParameter("course_startDate")));
+        chosenCourse.setEndDate(new SimpleDateFormat("MMMMM dd, yyyy h:mm").parse(request.getParameter("course_endDate")));
+        chosenCourse.setPlace(request.getParameter("course_place"));
+        chosenCourse.setCourseBy(courseBy);
 
-        courseDao.update(updatedCourse);
+        courseDao.update(chosenCourse);
         request.setAttribute("message", new Message(
-            "Course "+ updatedCourse.getName() +" has been UPDATED",
-            "#"+updatedCourse.getCode()+" - "+updatedCourse.getName(),
+            "Course "+ chosenCourse.getName() +" has been UPDATED",
+            "#"+chosenCourse.getCode()+" - "+chosenCourse.getName(),
             "success",
             "mini",
             "checkmark"));

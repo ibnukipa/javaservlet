@@ -4,6 +4,8 @@
 <%@page import="java.util.Collection" %>
 <c:set var="loggedUser" value="${sessionScope.user}"/>
 
+<c:set var="courses" value="${requestScope.courses}"/>
+
 <div class="ui segments bordernone">
     <div class="ui segment borderradiusless">
         <div class="ui medium header">

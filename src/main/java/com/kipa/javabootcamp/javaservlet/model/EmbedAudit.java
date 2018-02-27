@@ -1,11 +1,11 @@
-package com.kipa.javabootcamp.javaservlet.unit;
+package com.kipa.javabootcamp.javaservlet.model;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.time.LocalDateTime;
 
 @Embeddable
-public class Audit {
+public class EmbedAudit {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 

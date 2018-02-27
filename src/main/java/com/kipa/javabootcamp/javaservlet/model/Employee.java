@@ -1,10 +1,9 @@
 package com.kipa.javabootcamp.javaservlet.model;
 
 import com.kipa.javabootcamp.javaservlet.listener.AuditListener;
-import com.kipa.javabootcamp.javaservlet.unit.Audit;
-import com.kipa.javabootcamp.javaservlet.unit.Auditable;
 
 import javax.persistence.*;
+
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
@@ -12,14 +11,14 @@ import java.util.List;
 @Entity
 @Table(name = "employee")
 @EntityListeners(AuditListener.class)
-public class Employee implements Auditable, Serializable {
+public class Employee implements IAuditable, Serializable {
     @Id
     @Column(name = "employee_id")
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer id;
 
     @Embedded
-    private Audit audit;
+    private EmbedAudit audit;
 
     @Column(name = "employee_code")
     private String code;
@@ -46,10 +45,10 @@ public class Employee implements Auditable, Serializable {
     private String stream;
 
     @OneToMany(mappedBy="courseBy",targetEntity=Course.class,
-            fetch=FetchType.EAGER)
+            fetch=FetchType.LAZY)
     private Collection classes;
 
-    @ManyToMany(mappedBy="participants",fetch=FetchType.EAGER)
+    @ManyToMany(mappedBy="participants", cascade = {CascadeType.ALL})
     private List<Course> courses;
 
     public Employee(){}
@@ -143,12 +142,12 @@ public class Employee implements Auditable, Serializable {
     }
 
     @Override
-    public Audit getAudit() {
+    public EmbedAudit getAudit() {
         return this.audit;
     }
 
     @Override
-    public void setAudit(Audit audit) {
+    public void setAudit(EmbedAudit audit) {
         this.audit = audit;
     }
 }

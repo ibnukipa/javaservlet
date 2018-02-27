@@ -12,7 +12,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,19 +23,6 @@ import java.util.List;
 })
 public class EmployeeServlet extends AbstractServlet {
     private EmployeeDao employeeDao = new EmployeeDao();
-
-    private Employee convertRequestToEmployee(HttpServletRequest request) {
-        Employee employee = new Employee();
-        employee.setCode(request.getParameter("employee_code"));
-        employee.setUsername(request.getParameter("employee_username"));
-        employee.setPassword(request.getParameter("employee_password"));
-        employee.setName(request.getParameter("employee_name"));
-        employee.setAddress(request.getParameter("employee_address"));
-        employee.setPhone(request.getParameter("employee_phone"));
-        employee.setGrade(request.getParameter("employee_grade"));
-        employee.setStream(request.getParameter("employee_stream"));
-        return employee;
-    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -114,6 +100,8 @@ public class EmployeeServlet extends AbstractServlet {
             }});
             request.setAttribute("page", new Page(employee.getName().concat(" | ".concat(Constanta._APP_NAME))) {{setPath("employee/detail");}});
             request.setAttribute("employee", employee);
+            request.setAttribute("courses", employee.getCourses());
+            request.setAttribute("classes", employee.getClasses());
             forward(request, response);
         }
     }
@@ -131,7 +119,15 @@ public class EmployeeServlet extends AbstractServlet {
 
     private void postCreateEmployee(HttpServletRequest request, HttpServletResponse response)
         throws IOException {
-        Employee employee = this.convertRequestToEmployee(request);
+        Employee employee = new Employee();
+        employee.setCode(request.getParameter("employee_code"));
+        employee.setUsername(request.getParameter("employee_username"));
+        employee.setPassword(request.getParameter("employee_password"));
+        employee.setName(request.getParameter("employee_name"));
+        employee.setAddress(request.getParameter("employee_address"));
+        employee.setPhone(request.getParameter("employee_phone"));
+        employee.setGrade(request.getParameter("employee_grade"));
+        employee.setStream(request.getParameter("employee_stream"));
         employeeDao.create(employee);
         request.setAttribute("message", new Message(
             "Employee "+ employee.getName() +" has been CREATED",
@@ -166,14 +162,19 @@ public class EmployeeServlet extends AbstractServlet {
         Integer updatedEmployeeId = Integer.parseInt(request.getParameter("employee_id"));
         Employee choosenEmployee = employeeDao.getEmployeeById(updatedEmployeeId);
 
-        Employee updatedEmployee = convertRequestToEmployee(request);
-        updatedEmployee.setId(updatedEmployeeId);
-        updatedEmployee.setAudit(choosenEmployee.getAudit());
+        choosenEmployee.setCode(request.getParameter("employee_code"));
+        choosenEmployee.setUsername(request.getParameter("employee_username"));
+        choosenEmployee.setPassword(request.getParameter("employee_password"));
+        choosenEmployee.setName(request.getParameter("employee_name"));
+        choosenEmployee.setAddress(request.getParameter("employee_address"));
+        choosenEmployee.setPhone(request.getParameter("employee_phone"));
+        choosenEmployee.setGrade(request.getParameter("employee_grade"));
+        choosenEmployee.setStream(request.getParameter("employee_stream"));
 
-        employeeDao.update(updatedEmployee);
+        employeeDao.update(choosenEmployee);
         request.setAttribute("message", new Message(
-            "Employee "+ updatedEmployee.getName() +" has been UPDATED",
-            "#"+updatedEmployee.getCode()+" - "+updatedEmployee.getName()+" ("+updatedEmployee.getGrade()+" - "+updatedEmployee.getStream()+")",
+            "Employee "+ choosenEmployee.getName() +" has been UPDATED",
+            "#"+choosenEmployee.getCode()+" - "+choosenEmployee.getName()+" ("+choosenEmployee.getGrade()+" - "+choosenEmployee.getStream()+")",
             "success",
             "mini",
             "checkmark"));

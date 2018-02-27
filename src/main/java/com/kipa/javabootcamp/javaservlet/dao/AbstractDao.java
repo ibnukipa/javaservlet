@@ -5,10 +5,11 @@ import com.kipa.javabootcamp.javaservlet.util.JpaUtil;
 import javax.persistence.EntityManager;
 
 public abstract class AbstractDao<T> {
-    EntityManager entityManager = JpaUtil.getEntityManager();
+    EntityManager entityManager;
 
     public void create(T o) {
         try {
+            entityManager = JpaUtil.getEntityManager();
             entityManager.getTransaction().begin();
             entityManager.persist(o);
             entityManager.getTransaction().commit();
@@ -19,6 +20,7 @@ public abstract class AbstractDao<T> {
 
     public void update(T o) {
         try {
+            entityManager = JpaUtil.getEntityManager();
             entityManager.getTransaction().begin();
             entityManager.merge(o);
             entityManager.getTransaction().commit();
@@ -29,6 +31,7 @@ public abstract class AbstractDao<T> {
 
     public void delete(T o) {
         try {
+            entityManager = JpaUtil.getEntityManager();
             entityManager.getTransaction().begin();
             entityManager.remove(o);
             entityManager.getTransaction().commit();
